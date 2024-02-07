@@ -1,3 +1,11 @@
-[gd_scene format=3 uid="uid://gnigemb2g7pn"]
+[gd_scene load_steps=2 format=3 uid="uid://gnigemb2g7pn"]
+
+[ext_resource type="Script" path="res://GameBoard.gd" id="1_unaxk"]
 
 [node name="Main" type="Node2D"]
+
+[node name="GameSpace" type="Node2D" parent="."]
+
+[node name="GameBoard" type="Node2D" parent="GameSpace"]
+position = Vector2(163, 112)
+script = ExtResource("1_unaxk")

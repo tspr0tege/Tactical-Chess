@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://ofjs7lyx3qgd"]
+
+[ext_resource type="Texture2D" uid="uid://bckf1dtne2qvw" path="res://sprites/Top Down/Tiles/Marble 1 TD 64x72.png" id="1_hqe22"]
+
+[node name="BoardTile" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_hqe22")
+offset = Vector2(0, 4)
+hframes = 4
+vframes = 2
