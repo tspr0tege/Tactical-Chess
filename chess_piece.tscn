@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bysapky6ls8bw"]
+
+[ext_resource type="Script" path="res://scripts/ChessPiece.gd" id="1_hxf24"]
+
+[node name="ChessPiece" type="Node2D"]
+script = ExtResource("1_hxf24")

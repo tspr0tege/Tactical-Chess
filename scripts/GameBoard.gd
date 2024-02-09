@@ -1,6 +1,7 @@
 extends Node2D
 
 const BoardTile = preload("res://board_tile.tscn")
+const ChessPiece = preload("res://chess_piece.tscn")
 
 var boardTiles = []
 
@@ -13,17 +14,21 @@ func _ready():
 			
 			var newBoardTile = BoardTile.instantiate()
 			newBoardTile.position.x = x * 64
-			newBoardTile.position.y = y * 64
-			
+			newBoardTile.position.y = y * 64			
 			if (x + y) % 2 == 0:
 				newBoardTile.get_node("Sprite2D").frame = randi_range(4, 7)
 			else:
-				newBoardTile.get_node("Sprite2D").frame = randi_range(0, 3)
-			
-			newBoardTile.get_node("Sprite2D").flip_h = randi() % 2 == 0
-			
+				newBoardTile.get_node("Sprite2D").frame = randi_range(0, 3)			
+			newBoardTile.get_node("Sprite2D").flip_h = randi() % 2 == 0			
 			add_child(newBoardTile)
 			newRow.push_back(newBoardTile)
+			
+			if x == 0 or x == 7:
+				var newChessPiece = ChessPiece.instantiate()
+				var color = "White" if (x == 0) else "Black"
+				newChessPiece.createPiece(color, "King")
+				newChessPiece.position = newBoardTile.position
+				add_child(newChessPiece)
 		
 		boardTiles.push_back(newRow)
 
