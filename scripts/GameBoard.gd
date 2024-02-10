@@ -10,11 +10,13 @@ func _ready():
 		var newRow = []
 		for y in range(3):
 			if (isACorner(x, y)):
+				newRow.push_back(null)
 				continue
 			
 			var newBoardTile = BoardTile.instantiate()
 			newBoardTile.position.x = x * 64
-			newBoardTile.position.y = y * 64			
+			newBoardTile.position.y = y * 64
+			newBoardTile.coords = [x, y]
 			if (x + y) % 2 == 0:
 				newBoardTile.get_node("Sprite2D").frame = randi_range(4, 7)
 			else:
@@ -28,9 +30,12 @@ func _ready():
 				var color = "White" if (x == 0) else "Black"
 				newChessPiece.createPiece(color, "King")
 				newChessPiece.position = newBoardTile.position
+				newChessPiece.coords = [x, y]
 				add_child(newChessPiece)
 		
 		boardTiles.push_back(newRow)
+		
+	print(str(boardTiles))
 
 func isACorner(x, y):
 	return (x == 0 or x == 7) and (y == 0 or y == 2)

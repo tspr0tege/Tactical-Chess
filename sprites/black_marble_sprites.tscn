@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://cncvhkocjok4e" path="res://sprites/Top Down/Pieces/Black/Black - Marble 1 128x128.png" id="1_cvsji"]
 
 [node name="BlackMarbleSprites" type="Sprite2D"]
+z_index = 100
 texture = ExtResource("1_cvsji")
 offset = Vector2(0, -26)
 hframes = 4

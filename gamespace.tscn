@@ -1,0 +1,73 @@
+[gd_scene load_steps=11 format=3 uid="uid://nqnhu5oj2opp"]
+
+[ext_resource type="Texture2D" uid="uid://bckf1dtne2qvw" path="res://sprites/Top Down/Tiles/Marble 1 TD 64x72.png" id="1_gk0qi"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x6es6"]
+atlas = ExtResource("1_gk0qi")
+region = Rect2(0, 0, 64, 72)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dxo75"]
+atlas = ExtResource("1_gk0qi")
+region = Rect2(64, 0, 64, 72)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xf2tx"]
+atlas = ExtResource("1_gk0qi")
+region = Rect2(128, 0, 64, 72)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5hghl"]
+atlas = ExtResource("1_gk0qi")
+region = Rect2(192, 0, 64, 72)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t3p2y"]
+atlas = ExtResource("1_gk0qi")
+region = Rect2(0, 72, 64, 72)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ilek3"]
+atlas = ExtResource("1_gk0qi")
+region = Rect2(64, 72, 64, 72)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fijgq"]
+atlas = ExtResource("1_gk0qi")
+region = Rect2(128, 72, 64, 72)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yl3f0"]
+atlas = ExtResource("1_gk0qi")
+region = Rect2(192, 72, 64, 72)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_imf0y"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x6es6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dxo75")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xf2tx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5hghl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t3p2y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ilek3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fijgq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yl3f0")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Gamespace" type="Node2D"]
+
+[node name="TileSpriites" type="AnimatedSprite2D" parent="."]
+position = Vector2(408, 266)
+sprite_frames = SubResource("SpriteFrames_imf0y")

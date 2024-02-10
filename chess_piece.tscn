@@ -4,3 +4,15 @@
 
 [node name="ChessPiece" type="Node2D"]
 script = ExtResource("1_hxf24")
+
+[node name="TextureButton" type="TextureButton" parent="."]
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+visible = false
+polygon = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
+
+[connection signal="pressed" from="TextureButton" to="." method="_on_chesspiece_clicked"]

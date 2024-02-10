@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://bae6s5bbnme2v" path="res://sprites/Top Down/Pieces/White/White - Marble 1 128x128.png" id="1_qmv0m"]
 
 [node name="WhiteMarbleSprites" type="Sprite2D"]
+z_index = 100
 texture = ExtResource("1_qmv0m")
 offset = Vector2(0, -26)
 hframes = 4
