@@ -1,10 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://ofjs7lyx3qgd"]
 
 [ext_resource type="Texture2D" uid="uid://bckf1dtne2qvw" path="res://sprites/Top Down/Tiles/Marble 1 TD 64x72.png" id="1_hqe22"]
-[ext_resource type="Script" path="res://board_tile.gd" id="1_kfkfc"]
+[ext_resource type="Script" path="res://scripts/board_tile.gd" id="1_kva8t"]
 
 [node name="BoardTile" type="Node2D"]
-script = ExtResource("1_kfkfc")
+script = ExtResource("1_kva8t")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = 1

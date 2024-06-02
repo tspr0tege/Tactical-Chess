@@ -4,6 +4,7 @@ const BoardTile = preload("res://board_tile.tscn")
 const ChessPiece = preload("res://chess_piece.tscn")
 
 var boardTiles = []
+var MOVING_PIECE
 
 func _ready():
 	for x in range(8):
@@ -16,7 +17,7 @@ func _ready():
 			var newBoardTile = BoardTile.instantiate()
 			newBoardTile.position.x = x * 64
 			newBoardTile.position.y = y * 64
-			newBoardTile.coords = [x, y]
+			newBoardTile.coords = Vector2(x, y)
 			if (x + y) % 2 == 0:
 				newBoardTile.get_node("Sprite2D").frame = randi_range(4, 7)
 			else:
@@ -30,12 +31,19 @@ func _ready():
 				var color = "White" if (x == 0) else "Black"
 				newChessPiece.createPiece(color, "King")
 				newChessPiece.position = newBoardTile.position
-				newChessPiece.coords = [x, y]
+				newChessPiece.coords = Vector2(x, y)
 				add_child(newChessPiece)
+				newBoardTile.tenant = newChessPiece
 		
 		boardTiles.push_back(newRow)
 		
-	print(str(boardTiles))
-
+	#print(str(boardTiles))
+	
+func resetMoveTiles():
+	for x in boardTiles:
+		for tile in x:
+			if tile != null:
+				tile.get_node("TextureButton").visible = false
+	
 func isACorner(x, y):
 	return (x == 0 or x == 7) and (y == 0 or y == 2)
