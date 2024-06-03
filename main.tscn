@@ -9,3 +9,38 @@
 [node name="GameBoard" type="Node2D" parent="GameSpace"]
 position = Vector2(163, 112)
 script = ExtResource("1_4go1m")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="GameSpace"]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="GameSpace/CanvasLayer"]
+offset_left = 116.0
+offset_top = 556.0
+offset_right = 981.0
+offset_bottom = 596.0
+alignment = 1
+
+[node name="PawnButton" type="Button" parent="GameSpace/CanvasLayer/HBoxContainer"]
+layout_mode = 2
+text = "Pawn"
+
+[node name="BishopButton" type="Button" parent="GameSpace/CanvasLayer/HBoxContainer"]
+layout_mode = 2
+text = "Bishop"
+
+[node name="KnightButton" type="Button" parent="GameSpace/CanvasLayer/HBoxContainer"]
+layout_mode = 2
+text = "Knight"
+
+[node name="RookButton" type="Button" parent="GameSpace/CanvasLayer/HBoxContainer"]
+layout_mode = 2
+text = "Rook"
+
+[node name="QueenButton" type="Button" parent="GameSpace/CanvasLayer/HBoxContainer"]
+layout_mode = 2
+text = "Queen"
+
+[connection signal="button_up" from="GameSpace/CanvasLayer/HBoxContainer/PawnButton" to="GameSpace/GameBoard" method="_on_buy_piece_button_up" binds= ["Pawn"]]
+[connection signal="button_up" from="GameSpace/CanvasLayer/HBoxContainer/BishopButton" to="GameSpace/GameBoard" method="_on_buy_piece_button_up" binds= ["Bishop"]]
+[connection signal="button_up" from="GameSpace/CanvasLayer/HBoxContainer/KnightButton" to="GameSpace/GameBoard" method="_on_buy_piece_button_up" binds= ["Knight"]]
+[connection signal="button_up" from="GameSpace/CanvasLayer/HBoxContainer/RookButton" to="GameSpace/GameBoard" method="_on_buy_piece_button_up" binds= ["Rook"]]
+[connection signal="button_up" from="GameSpace/CanvasLayer/HBoxContainer/QueenButton" to="GameSpace/GameBoard" method="_on_buy_piece_button_up" binds= ["Queen"]]

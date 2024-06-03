@@ -5,6 +5,7 @@ const ChessPiece = preload("res://chess_piece.tscn")
 
 var boardTiles = []
 var MOVING_PIECE
+var creatingPiece = false
 
 func _ready():
 	for x in range(8):
@@ -47,3 +48,32 @@ func resetMoveTiles():
 	
 func isACorner(x, y):
 	return (x == 0 or x == 7) and (y == 0 or y == 2)
+
+
+func _on_buy_piece_button_up(piece_name):
+	var emptyTileFound = false
+	
+	for tile in boardTiles[1]:
+		if not is_instance_valid(tile.tenant):
+			tile.get_node("TextureButton").visible = true
+			emptyTileFound = true
+	for tile in boardTiles[2]:
+		if not is_instance_valid(tile.tenant):
+			tile.get_node("TextureButton").visible = true
+			emptyTileFound = true
+	
+	if emptyTileFound:
+		print("Buying " + piece_name)
+		# CREATE PIECE
+		var newChessPiece = ChessPiece.instantiate()
+		#var color = "White"
+		newChessPiece.createPiece("White", piece_name)
+		add_child(newChessPiece)
+		creatingPiece = true
+		MOVING_PIECE = newChessPiece
+	else:
+		print("No tiles available for move")
+	
+	#newChessPiece.position = newBoardTile.position
+	#newChessPiece.coords = Vector2(x, y)
+	#newBoardTile.tenant = newChessPiece

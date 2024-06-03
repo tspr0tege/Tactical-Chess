@@ -16,7 +16,28 @@ func createPiece(clr, type):
 	else: 
 		spriteSet = blackPieces.instantiate()
 	self.add_child(spriteSet)
-	spriteSet.frame = 8
+	
+	match type:
+		"King":
+			print("creating King")
+			spriteSet.frame = 8
+		"Queen":
+			print("creating Queen")
+			spriteSet.frame = 10
+		"Rook":
+			print("creating Rook")
+			spriteSet.frame = 11
+		"Knight":
+			print("creating Knight")
+			spriteSet.frame = 4 if clr == "White" else 7
+		"Bishop":
+			print("creating Bishop")
+			spriteSet.frame = 0 if clr == "White" else 3
+		"Pawn":
+			print("creating Pawn")
+			spriteSet.frame = 12
+		var wild_card:
+			print(wild_card)
 
 
 func _on_chesspiece_clicked():
@@ -26,7 +47,12 @@ func _on_chesspiece_clicked():
 	
 	GAME_BOARD.resetMoveTiles()
 	
-	if GAME_BOARD.MOVING_PIECE != self:	
+	if GAME_BOARD.creatingPiece:
+		GAME_BOARD.MOVING_PIECE.queue_free()
+		GAME_BOARD.MOVING_PIECE = null
+		GAME_BOARD.creatingPiece = false
+	
+	if GAME_BOARD.MOVING_PIECE != self:
 		GAME_BOARD.MOVING_PIECE = self
 		
 		for x in range(3):
