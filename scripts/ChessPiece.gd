@@ -4,10 +4,11 @@ const blackPieces = preload("res://sprites/black_marble_sprites.tscn")
 const whitePieces = preload("res://sprites/white_marble_sprites.tscn")
 
 
-@onready var GAME_BOARD = find_parent("GameBoard")	
-var color
+@onready var GAME_BOARD = find_parent("GameBoard")
+var first_move = true
 var type_of_piece
 var coords
+var color
 
 func createPiece(clr, type):
 	self.color = clr
@@ -131,10 +132,58 @@ func generateCrossMovementTiles():
 		else: break
 	
 func generateDiagonalMovementTiles():
-	pass
+	# +/+ SouthEast
+	for x in range(3 - coords.y):
+		if x == 0: continue
+		if isValidTile(coords + Vector2(x, x)):
+			GAME_BOARD.boardTiles[coords.x + x][coords.y + x].get_node("TextureButton").visible = true
+		else: break
+		
+	# +/- NorthEast
+	for x in range(coords.y + 1):
+		if x == 0: continue
+		if isValidTile(coords + Vector2(x, -x)):
+			GAME_BOARD.boardTiles[coords.x + x][coords.y - x].get_node("TextureButton").visible = true
+		else: break
+		
+	# -/- NorthWest
+	for x in range(coords.y + 1):
+		if x == 0: continue
+		if isValidTile(coords + Vector2(-x, -x)):
+			GAME_BOARD.boardTiles[coords.x - x][coords.y - x].get_node("TextureButton").visible = true
+		else: break
+		
+	# -/+ SouthWest
+	for x in range(3 - coords.y):
+		if x == 0: continue
+		if isValidTile(coords + Vector2(-x, x)):
+			GAME_BOARD.boardTiles[coords.x - x][coords.y + x].get_node("TextureButton").visible = true
+		else: break
 	
 func generateKnightMovementTiles():
-	pass
+	const targetTiles = [
+		Vector2(2, 1), 
+		Vector2(-2, 1), 
+		Vector2(2, -1), 
+		Vector2(-2, -1), 
+		Vector2(1, 2), 
+		Vector2(-1, 2), 
+		Vector2(1, -2), 
+		Vector2(-1, -2)
+	]
+	
+	for target in targetTiles:
+		var targetCoords = coords + target
+		if isValidTile(targetCoords):
+			GAME_BOARD.boardTiles[targetCoords.x][targetCoords.y].get_node("TextureButton").visible = true
 	
 func generatePawnMovementTiles():
-	pass
+	var xDirection = 1 if color == "White" else -1
+	# Check back row for piece sacrifice (get 2 points)
+	
+	
+	if isValidTile(coords + Vector2(xDirection, 0)):
+		GAME_BOARD.boardTiles[coords.x + xDirection][coords.y].get_node("TextureButton").visible = true
+		if first_move and isValidTile(coords + Vector2(xDirection * 2, 0)):
+			GAME_BOARD.boardTiles[coords.x + (xDirection * 2)][coords.y].get_node("TextureButton").visible = true
+	# Check diagonals for attack

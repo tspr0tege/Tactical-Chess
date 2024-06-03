@@ -10,6 +10,7 @@ func _on_texture_button_pressed():
 	print("Moving " + PIECE.color +" "+ PIECE.type_of_piece + " to " + str(coords))
 	if not GAME_BOARD.creatingPiece:
 		GAME_BOARD.boardTiles[PIECE.coords.x][PIECE.coords.y].tenant = null
+		PIECE.first_move = false
 	PIECE.coords = coords
 	tenant = PIECE
 	PIECE.moveTo(self.position)
