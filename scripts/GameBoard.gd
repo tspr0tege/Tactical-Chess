@@ -52,6 +52,7 @@ func isACorner(x, y):
 
 func _on_buy_piece_button_up(piece_name):
 	var emptyTileFound = false
+	resetMoveTiles()
 	
 	for tile in boardTiles[1]:
 		if not is_instance_valid(tile.tenant):
