@@ -7,6 +7,23 @@ var boardTiles = []
 var MOVING_PIECE
 var creatingPiece = false
 var playerTurn = "White"
+var moveAvailable = true
+var buyAvailable = true
+const pieceValues = {
+	"Pawn": 1,
+	"Bishop": 2,
+	"Knight": 3,
+	"Rook": 4,
+	"Queen": 5,
+}
+var player = {
+	"White": {
+		"points": 5,
+	},
+	"Black": {
+		"points": 5,
+	},
+}
 
 func _ready():
 	for x in range(8):
@@ -52,6 +69,8 @@ func isACorner(x, y):
 	return (x == 0 or x == 7) and (y == 0 or y == 2)
 
 func _on_buy_piece_button_up(piece_name):
+	if not buyAvailable: return
+	
 	var emptyTileFound = false
 	var spawnColumns = [1, 2] if playerTurn == "White" else [5, 6]
 	resetMoveTiles()
@@ -101,6 +120,7 @@ func getMovementTiles(CHESS_PIECE):
 			if x == 0: continue
 			if isValidTile.call(coords + Vector2(x, 0)):
 				tilesArray.push_back(boardTiles[coords.x + x][coords.y])
+				if is_instance_valid(tilesArray[-1].tenant): break
 			else: break
 			
 		# down
@@ -108,6 +128,7 @@ func getMovementTiles(CHESS_PIECE):
 			if x == 0: continue
 			if isValidTile.call(coords + Vector2(0, x)):
 				tilesArray.push_back(boardTiles[coords.x][coords.y + x])
+				if is_instance_valid(tilesArray[-1].tenant): break
 			else: break
 			
 		# left
@@ -115,6 +136,7 @@ func getMovementTiles(CHESS_PIECE):
 			if x == 0: continue
 			if isValidTile.call(coords + Vector2(-x, 0)):
 				tilesArray.push_back(boardTiles[coords.x - x][coords.y])
+				if is_instance_valid(tilesArray[-1].tenant): break
 			else: break
 			
 		# up
@@ -122,6 +144,7 @@ func getMovementTiles(CHESS_PIECE):
 			if x == 0: continue
 			if isValidTile.call(coords + Vector2(0, -x)):
 				tilesArray.push_back(boardTiles[coords.x][coords.y - x])
+				if is_instance_valid(tilesArray[-1].tenant): break
 			else: break
 
 	var getDiagonalMovementTiles = func():		
@@ -130,6 +153,7 @@ func getMovementTiles(CHESS_PIECE):
 			if x == 0: continue
 			if isValidTile.call(coords + Vector2(x, x)):
 				tilesArray.push_back(boardTiles[coords.x + x][coords.y + x])
+				if is_instance_valid(tilesArray[-1].tenant): break
 			else: break
 			
 		# +/- NorthEast
@@ -137,6 +161,7 @@ func getMovementTiles(CHESS_PIECE):
 			if x == 0: continue
 			if isValidTile.call(coords + Vector2(x, -x)):
 				tilesArray.push_back(boardTiles[coords.x + x][coords.y - x])
+				if is_instance_valid(tilesArray[-1].tenant): break
 			else: break
 			
 		# -/- NorthWest
@@ -144,6 +169,7 @@ func getMovementTiles(CHESS_PIECE):
 			if x == 0: continue
 			if isValidTile.call(coords + Vector2(-x, -x)):
 				tilesArray.push_back(boardTiles[coords.x - x][coords.y - x])
+				if is_instance_valid(tilesArray[-1].tenant): break
 			else: break
 			
 		# -/+ SouthWest
@@ -151,6 +177,7 @@ func getMovementTiles(CHESS_PIECE):
 			if x == 0: continue
 			if isValidTile.call(coords + Vector2(-x, x)):
 				tilesArray.push_back(boardTiles[coords.x - x][coords.y + x])
+				if is_instance_valid(tilesArray[-1].tenant): break
 			else: break
 
 	match CHESS_PIECE.type_of_piece:
@@ -170,12 +197,18 @@ func getMovementTiles(CHESS_PIECE):
 			
 			# TODO: Check back row for piece sacrifice (get 2 points)	
 			
-			if isValidTile.call(coords + Vector2(xDirection, 0)):
+			# TODO: Check diagonals for attack
+			if isValidTile.call(coords + Vector2(xDirection, 1)) and is_instance_valid(boardTiles[coords.x + xDirection][coords.y + 1].tenant) and boardTiles[coords.x + xDirection][coords.y + 1].tenant.color != playerTurn:
+				tilesArray.push_back(boardTiles[coords.x + xDirection][coords.y + 1])
+			
+			if isValidTile.call(coords + Vector2(xDirection, -1)) and is_instance_valid(boardTiles[coords.x + xDirection][coords.y - 1].tenant) and boardTiles[coords.x + xDirection][coords.y - 1].tenant.color != playerTurn:
+				tilesArray.push_back(boardTiles[coords.x + xDirection][coords.y - 1])
+			
+			if isValidTile.call(coords + Vector2(xDirection, 0)) and not is_instance_valid(boardTiles[coords.x + xDirection][coords.y].tenant): 
 				tilesArray.push_back(boardTiles[coords.x + xDirection][coords.y])
 				if CHESS_PIECE.first_move and isValidTile.call(coords + Vector2(xDirection * 2, 0)):
 					tilesArray.push_back(boardTiles[coords.x + (xDirection * 2)][coords.y])
 			
-			# TODO: Check diagonals for attack
 		"Knight":
 			const targetTiles = [
 				Vector2(2, 1), 
@@ -199,3 +232,11 @@ func getMovementTiles(CHESS_PIECE):
 			getDiagonalMovementTiles.call()
 	
 	return tilesArray
+
+func _on_end_turn_button_button_up():
+	playerTurn = "Black" if playerTurn == "White" else "White"
+	player[playerTurn].points += 1
+	moveAvailable = true
+	buyAvailable = true
+	for button in $"../CanvasLayer/HBoxContainer".get_children():
+		button.isAvailable()

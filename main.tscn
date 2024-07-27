@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://gnigemb2g7pn"]
+[gd_scene load_steps=3 format=3 uid="uid://gnigemb2g7pn"]
 
 [ext_resource type="Script" path="res://scripts/GameBoard.gd" id="1_4go1m"]
+[ext_resource type="Script" path="res://scripts/BuyButtons.gd" id="2_50bpa"]
 
 [node name="Main" type="Node2D"]
 
@@ -21,26 +22,44 @@ alignment = 1
 
 [node name="PawnButton" type="Button" parent="GameSpace/CanvasLayer/HBoxContainer"]
 layout_mode = 2
+disabled = true
 text = "Pawn"
+script = ExtResource("2_50bpa")
 
 [node name="BishopButton" type="Button" parent="GameSpace/CanvasLayer/HBoxContainer"]
 layout_mode = 2
+disabled = true
 text = "Bishop"
+script = ExtResource("2_50bpa")
 
 [node name="KnightButton" type="Button" parent="GameSpace/CanvasLayer/HBoxContainer"]
 layout_mode = 2
+disabled = true
 text = "Knight"
+script = ExtResource("2_50bpa")
 
 [node name="RookButton" type="Button" parent="GameSpace/CanvasLayer/HBoxContainer"]
 layout_mode = 2
+disabled = true
 text = "Rook"
+script = ExtResource("2_50bpa")
 
 [node name="QueenButton" type="Button" parent="GameSpace/CanvasLayer/HBoxContainer"]
 layout_mode = 2
+disabled = true
 text = "Queen"
+script = ExtResource("2_50bpa")
+
+[node name="EndTurnButton" type="Button" parent="GameSpace/CanvasLayer"]
+offset_left = 1039.0
+offset_top = 312.0
+offset_right = 1117.0
+offset_bottom = 343.0
+text = "End Turn"
 
 [connection signal="button_up" from="GameSpace/CanvasLayer/HBoxContainer/PawnButton" to="GameSpace/GameBoard" method="_on_buy_piece_button_up" binds= ["Pawn"]]
 [connection signal="button_up" from="GameSpace/CanvasLayer/HBoxContainer/BishopButton" to="GameSpace/GameBoard" method="_on_buy_piece_button_up" binds= ["Bishop"]]
 [connection signal="button_up" from="GameSpace/CanvasLayer/HBoxContainer/KnightButton" to="GameSpace/GameBoard" method="_on_buy_piece_button_up" binds= ["Knight"]]
 [connection signal="button_up" from="GameSpace/CanvasLayer/HBoxContainer/RookButton" to="GameSpace/GameBoard" method="_on_buy_piece_button_up" binds= ["Rook"]]
 [connection signal="button_up" from="GameSpace/CanvasLayer/HBoxContainer/QueenButton" to="GameSpace/GameBoard" method="_on_buy_piece_button_up" binds= ["Queen"]]
+[connection signal="button_up" from="GameSpace/CanvasLayer/EndTurnButton" to="GameSpace/GameBoard" method="_on_end_turn_button_button_up"]

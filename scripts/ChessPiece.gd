@@ -45,6 +45,9 @@ func createPiece(clr, type):
 func _on_chesspiece_clicked():
 	#print("Clicked on " + str(color) + " " + str(type_of_piece))
 	#print("Coords: " + str(coords))
+	if not GAME_BOARD.playerTurn == color: return
+	if not GAME_BOARD.moveAvailable : return
+	
 	GAME_BOARD.resetMoveTiles()
 	
 	if GAME_BOARD.creatingPiece:
@@ -58,6 +61,10 @@ func _on_chesspiece_clicked():
 		var movementTiles = GAME_BOARD.getMovementTiles(self)
 		for tile in movementTiles:
 			tile.get_node("TextureButton").visible = true
+			if is_instance_valid(tile.tenant):
+				tile.get_node("TextureButton/Polygon2D").color = "#ff7700"
+			else:
+				tile.get_node("TextureButton/Polygon2D").color = "#00ff00"
 		
 	else:
 		GAME_BOARD.MOVING_PIECE = null
