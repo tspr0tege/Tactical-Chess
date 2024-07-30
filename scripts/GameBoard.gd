@@ -6,7 +6,7 @@ const ChessPiece = preload("res://chess_piece.tscn")
 var boardTiles = []
 var MOVING_PIECE
 var creatingPiece = false
-var playerTurn = "White"
+var playerTurn = ["White", "Black"]
 var moveAvailable = true
 var buyAvailable = true
 const pieceValues = {
@@ -18,9 +18,11 @@ const pieceValues = {
 }
 var player = {
 	"White": {
+		"pieces": [],
 		"points": 5,
 	},
 	"Black": {
+		"pieces": [],
 		"points": 5,
 	},
 }
@@ -64,6 +66,7 @@ func resetMoveTiles():
 		for tile in x:
 			if tile != null:
 				tile.get_node("TextureButton").visible = false
+				tile.get_node("TextureButton/Polygon2D").color = "#00ff00"
 
 func isACorner(x, y):
 	return (x == 0 or x == 7) and (y == 0 or y == 2)
@@ -72,7 +75,7 @@ func _on_buy_piece_button_up(piece_name):
 	if not buyAvailable: return
 	
 	var emptyTileFound = false
-	var spawnColumns = [1, 2] if playerTurn == "White" else [5, 6]
+	var spawnColumns = [1, 2] if playerTurn[0] == "White" else [5, 6]
 	resetMoveTiles()
 	
 	for tile in boardTiles[spawnColumns[0]]:
@@ -89,7 +92,7 @@ func _on_buy_piece_button_up(piece_name):
 		# CREATE PIECE
 		var newChessPiece = ChessPiece.instantiate()
 		#var color = "White"
-		newChessPiece.createPiece(playerTurn, piece_name)
+		newChessPiece.createPiece(playerTurn[0], piece_name)
 		add_child(newChessPiece)
 		creatingPiece = true
 		MOVING_PIECE = newChessPiece
@@ -198,10 +201,10 @@ func getMovementTiles(CHESS_PIECE):
 			# TODO: Check back row for piece sacrifice (get 2 points)	
 			
 			# TODO: Check diagonals for attack
-			if isValidTile.call(coords + Vector2(xDirection, 1)) and is_instance_valid(boardTiles[coords.x + xDirection][coords.y + 1].tenant) and boardTiles[coords.x + xDirection][coords.y + 1].tenant.color != playerTurn:
+			if isValidTile.call(coords + Vector2(xDirection, 1)) and is_instance_valid(boardTiles[coords.x + xDirection][coords.y + 1].tenant) and boardTiles[coords.x + xDirection][coords.y + 1].tenant.color != playerTurn[0]:
 				tilesArray.push_back(boardTiles[coords.x + xDirection][coords.y + 1])
 			
-			if isValidTile.call(coords + Vector2(xDirection, -1)) and is_instance_valid(boardTiles[coords.x + xDirection][coords.y - 1].tenant) and boardTiles[coords.x + xDirection][coords.y - 1].tenant.color != playerTurn:
+			if isValidTile.call(coords + Vector2(xDirection, -1)) and is_instance_valid(boardTiles[coords.x + xDirection][coords.y - 1].tenant) and boardTiles[coords.x + xDirection][coords.y - 1].tenant.color != playerTurn[0]:
 				tilesArray.push_back(boardTiles[coords.x + xDirection][coords.y - 1])
 			
 			if isValidTile.call(coords + Vector2(xDirection, 0)) and not is_instance_valid(boardTiles[coords.x + xDirection][coords.y].tenant): 
@@ -234,9 +237,21 @@ func getMovementTiles(CHESS_PIECE):
 	return tilesArray
 
 func _on_end_turn_button_button_up():
-	playerTurn = "Black" if playerTurn == "White" else "White"
-	player[playerTurn].points += 1
+	playerTurn.reverse()
+	player[playerTurn[0]].points += 1
 	moveAvailable = true
 	buyAvailable = true
+	
+	for piece in player.White.pieces:
+		var TEXTURE_BUTTON = piece.get_node("TextureButton")
+		TEXTURE_BUTTON.disabled = playerTurn[0] == "Black"
+		TEXTURE_BUTTON.set_mouse_filter(2 if playerTurn[0] == "Black" else 0)
+	
+	for piece in player.Black.pieces:
+		var TEXTURE_BUTTON = piece.get_node("TextureButton")
+		TEXTURE_BUTTON.disabled = playerTurn[0] == "White"
+		TEXTURE_BUTTON.set_mouse_filter(2 if playerTurn[0] == "White" else 0)
+		#print(str(piece.color) + " " + str(piece.type_of_piece) + " disabled set to: " + str(piece.get_node("TextureButton").disabled))
+	
 	for button in $"../CanvasLayer/HBoxContainer".get_children():
 		button.isAvailable()

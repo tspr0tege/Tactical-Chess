@@ -43,9 +43,9 @@ func createPiece(clr, type):
 			print("ERROR: unable to match type_of_piece in createPiece. Received: " + str(wild_card))
 
 func _on_chesspiece_clicked():
-	#print("Clicked on " + str(color) + " " + str(type_of_piece))
+	print("Clicked on " + str(color) + " " + str(type_of_piece))
 	#print("Coords: " + str(coords))
-	if not GAME_BOARD.playerTurn == color: return
+	if not GAME_BOARD.playerTurn[0] == color: return
 	if not GAME_BOARD.moveAvailable : return
 	
 	GAME_BOARD.resetMoveTiles()
@@ -63,8 +63,6 @@ func _on_chesspiece_clicked():
 			tile.get_node("TextureButton").visible = true
 			if is_instance_valid(tile.tenant):
 				tile.get_node("TextureButton/Polygon2D").color = "#ff7700"
-			else:
-				tile.get_node("TextureButton/Polygon2D").color = "#00ff00"
 		
 	else:
 		GAME_BOARD.MOVING_PIECE = null
