@@ -5,7 +5,7 @@ const ChessPiece = preload("res://chess_piece.tscn")
 
 var boardTiles = []
 var MOVING_PIECE
-var creatingPiece = false
+var NEW_PIECE = null
 var playerTurn = ["White", "Black"]
 var moveAvailable = true
 var buyAvailable = true
@@ -13,17 +13,17 @@ const pieceValues = {
 	"Pawn": 1,
 	"Bishop": 2,
 	"Knight": 3,
-	"Rook": 4,
-	"Queen": 5,
+	"Rook": 5,
+	"Queen": 9,
 }
 var player = {
 	"White": {
 		"pieces": [],
-		"points": 5,
+		"points": 1,
 	},
 	"Black": {
 		"pieces": [],
-		"points": 5,
+		"points": 0,
 	},
 }
 
@@ -38,6 +38,7 @@ func _ready():
 			var newBoardTile = BoardTile.instantiate()
 			newBoardTile.position.x = x * 64
 			newBoardTile.position.y = y * 64
+			newBoardTile.z_index = 10 + (y * 10)
 			newBoardTile.coords = Vector2(x, y)
 			if (x + y) % 2 == 0:
 				newBoardTile.get_node("Sprite2D").frame = randi_range(4, 7)
@@ -54,12 +55,12 @@ func _ready():
 				newChessPiece.createPiece(color, "King")
 				newChessPiece.position = newBoardTile.position
 				newChessPiece.coords = Vector2(x, y)
+				newChessPiece.is_moveable = true
 				add_child(newChessPiece)
 				newBoardTile.tenant = newChessPiece
 		
 		boardTiles.push_back(newRow)
-		
-	#print(str(boardTiles))
+		updatePoints()
 
 func resetMoveTiles():
 	for x in boardTiles:
@@ -91,13 +92,17 @@ func _on_buy_piece_button_up(piece_name):
 		print("Buying " + piece_name)
 		# CREATE PIECE
 		var newChessPiece = ChessPiece.instantiate()
-		#var color = "White"
 		newChessPiece.createPiece(playerTurn[0], piece_name)
+		newChessPiece.position = Vector2(32 * 7, -64)
 		add_child(newChessPiece)
-		creatingPiece = true
+		NEW_PIECE = newChessPiece
 		MOVING_PIECE = newChessPiece
 	else:
 		print("No tiles available for new piece")
+
+func updatePoints():
+	$"../CanvasLayer/MarginContainer/HBoxContainer2/RichTextLabel".text = "[left]" + str(player.White.points) + "[/left]"
+	$"../CanvasLayer/MarginContainer/HBoxContainer2/RichTextLabel2".text = "[right]" + str(player.Black.points) + "[/right]"
 
 func getMovementTiles(CHESS_PIECE):
 	var tilesArray = []
@@ -200,7 +205,6 @@ func getMovementTiles(CHESS_PIECE):
 			
 			# TODO: Check back row for piece sacrifice (get 2 points)	
 			
-			# TODO: Check diagonals for attack
 			if isValidTile.call(coords + Vector2(xDirection, 1)) and is_instance_valid(boardTiles[coords.x + xDirection][coords.y + 1].tenant) and boardTiles[coords.x + xDirection][coords.y + 1].tenant.color != playerTurn[0]:
 				tilesArray.push_back(boardTiles[coords.x + xDirection][coords.y + 1])
 			
@@ -223,7 +227,7 @@ func getMovementTiles(CHESS_PIECE):
 				Vector2(1, -2), 
 				Vector2(-1, -2)
 			]
-						
+			
 			for target in targetTiles:
 				var targetCoords = coords + target
 				if isValidTile.call(targetCoords):
@@ -237,10 +241,20 @@ func getMovementTiles(CHESS_PIECE):
 	return tilesArray
 
 func _on_end_turn_button_button_up():
+	resetMoveTiles()
+	if is_instance_valid(NEW_PIECE):
+		NEW_PIECE.is_moveable = true
+		NEW_PIECE = null
+	if is_instance_valid(MOVING_PIECE) and MOVING_PIECE == NEW_PIECE:
+		MOVING_PIECE.queue_free()
+		MOVING_PIECE = null
+	
+	#Initialize new turn
 	playerTurn.reverse()
 	player[playerTurn[0]].points += 1
 	moveAvailable = true
 	buyAvailable = true
+	updatePoints()
 	
 	for piece in player.White.pieces:
 		var TEXTURE_BUTTON = piece.get_node("TextureButton")
@@ -251,7 +265,8 @@ func _on_end_turn_button_button_up():
 		var TEXTURE_BUTTON = piece.get_node("TextureButton")
 		TEXTURE_BUTTON.disabled = playerTurn[0] == "White"
 		TEXTURE_BUTTON.set_mouse_filter(2 if playerTurn[0] == "White" else 0)
-		#print(str(piece.color) + " " + str(piece.type_of_piece) + " disabled set to: " + str(piece.get_node("TextureButton").disabled))
-	
-	for button in $"../CanvasLayer/HBoxContainer".get_children():
+	updateBuyButtons()
+
+func updateBuyButtons():
+	for button in $"../CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer".get_children():
 		button.isAvailable()

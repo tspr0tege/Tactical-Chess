@@ -7,6 +7,7 @@ const whitePieces = preload("res://sprites/white_marble_sprites.tscn")
 @onready var GAME_BOARD = find_parent("GameBoard")
 var first_move = true
 var type_of_piece
+var is_moveable = false
 var color
 var coords
 
@@ -46,14 +47,15 @@ func _on_chesspiece_clicked():
 	print("Clicked on " + str(color) + " " + str(type_of_piece))
 	#print("Coords: " + str(coords))
 	if not GAME_BOARD.playerTurn[0] == color: return
-	if not GAME_BOARD.moveAvailable : return
+	if not GAME_BOARD.moveAvailable: return
+	if not is_moveable: return
 	
 	GAME_BOARD.resetMoveTiles()
 	
-	if GAME_BOARD.creatingPiece:
+	if is_instance_valid(GAME_BOARD.NEW_PIECE) and GAME_BOARD.MOVING_PIECE == GAME_BOARD.NEW_PIECE:
 		GAME_BOARD.MOVING_PIECE.queue_free()
 		GAME_BOARD.MOVING_PIECE = null
-		GAME_BOARD.creatingPiece = false
+		GAME_BOARD.NEW_PIECE = null
 	
 	if GAME_BOARD.MOVING_PIECE != self:
 		GAME_BOARD.MOVING_PIECE = self

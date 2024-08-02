@@ -8,47 +8,10 @@
 [node name="GameSpace" type="Node2D" parent="."]
 
 [node name="GameBoard" type="Node2D" parent="GameSpace"]
-position = Vector2(163, 112)
+position = Vector2(200, 200)
 script = ExtResource("1_4go1m")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="GameSpace"]
-
-[node name="HBoxContainer" type="HBoxContainer" parent="GameSpace/CanvasLayer"]
-offset_left = 116.0
-offset_top = 556.0
-offset_right = 981.0
-offset_bottom = 596.0
-alignment = 1
-
-[node name="PawnButton" type="Button" parent="GameSpace/CanvasLayer/HBoxContainer"]
-layout_mode = 2
-disabled = true
-text = "Pawn"
-script = ExtResource("2_50bpa")
-
-[node name="BishopButton" type="Button" parent="GameSpace/CanvasLayer/HBoxContainer"]
-layout_mode = 2
-disabled = true
-text = "Bishop"
-script = ExtResource("2_50bpa")
-
-[node name="KnightButton" type="Button" parent="GameSpace/CanvasLayer/HBoxContainer"]
-layout_mode = 2
-disabled = true
-text = "Knight"
-script = ExtResource("2_50bpa")
-
-[node name="RookButton" type="Button" parent="GameSpace/CanvasLayer/HBoxContainer"]
-layout_mode = 2
-disabled = true
-text = "Rook"
-script = ExtResource("2_50bpa")
-
-[node name="QueenButton" type="Button" parent="GameSpace/CanvasLayer/HBoxContainer"]
-layout_mode = 2
-disabled = true
-text = "Queen"
-script = ExtResource("2_50bpa")
 
 [node name="EndTurnButton" type="Button" parent="GameSpace/CanvasLayer"]
 offset_left = 1039.0
@@ -57,9 +20,79 @@ offset_right = 1117.0
 offset_bottom = 343.0
 text = "End Turn"
 
-[connection signal="button_up" from="GameSpace/CanvasLayer/HBoxContainer/PawnButton" to="GameSpace/GameBoard" method="_on_buy_piece_button_up" binds= ["Pawn"]]
-[connection signal="button_up" from="GameSpace/CanvasLayer/HBoxContainer/BishopButton" to="GameSpace/GameBoard" method="_on_buy_piece_button_up" binds= ["Bishop"]]
-[connection signal="button_up" from="GameSpace/CanvasLayer/HBoxContainer/KnightButton" to="GameSpace/GameBoard" method="_on_buy_piece_button_up" binds= ["Knight"]]
-[connection signal="button_up" from="GameSpace/CanvasLayer/HBoxContainer/RookButton" to="GameSpace/GameBoard" method="_on_buy_piece_button_up" binds= ["Rook"]]
-[connection signal="button_up" from="GameSpace/CanvasLayer/HBoxContainer/QueenButton" to="GameSpace/GameBoard" method="_on_buy_piece_button_up" binds= ["Queen"]]
+[node name="MarginContainer" type="MarginContainer" parent="GameSpace/CanvasLayer"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="GameSpace/CanvasLayer/MarginContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="GameSpace/CanvasLayer/MarginContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+text = "[left]White Points[/left]"
+fit_content = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="GameSpace/CanvasLayer/MarginContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+alignment = 1
+
+[node name="PawnButton" type="Button" parent="GameSpace/CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Pawn (1)"
+script = ExtResource("2_50bpa")
+
+[node name="BishopButton" type="Button" parent="GameSpace/CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Bishop (2)"
+script = ExtResource("2_50bpa")
+
+[node name="KnightButton" type="Button" parent="GameSpace/CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Knight (3)"
+script = ExtResource("2_50bpa")
+
+[node name="RookButton" type="Button" parent="GameSpace/CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Rook (5)"
+script = ExtResource("2_50bpa")
+
+[node name="QueenButton" type="Button" parent="GameSpace/CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Queen (9)"
+script = ExtResource("2_50bpa")
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="GameSpace/CanvasLayer/MarginContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+text = "[right]Black Points[/right]"
+fit_content = true
+
 [connection signal="button_up" from="GameSpace/CanvasLayer/EndTurnButton" to="GameSpace/GameBoard" method="_on_end_turn_button_button_up"]
+[connection signal="button_up" from="GameSpace/CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer/PawnButton" to="GameSpace/GameBoard" method="_on_buy_piece_button_up" binds= ["Pawn"]]
+[connection signal="button_up" from="GameSpace/CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer/BishopButton" to="GameSpace/GameBoard" method="_on_buy_piece_button_up" binds= ["Bishop"]]
+[connection signal="button_up" from="GameSpace/CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer/KnightButton" to="GameSpace/GameBoard" method="_on_buy_piece_button_up" binds= ["Knight"]]
+[connection signal="button_up" from="GameSpace/CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer/RookButton" to="GameSpace/GameBoard" method="_on_buy_piece_button_up" binds= ["Rook"]]
+[connection signal="button_up" from="GameSpace/CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer/QueenButton" to="GameSpace/GameBoard" method="_on_buy_piece_button_up" binds= ["Queen"]]
