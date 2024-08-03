@@ -1,0 +1,62 @@
+[gd_scene load_steps=6 format=3 uid="uid://bqtwxkov74ha1"]
+
+[ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_jbnnv"]
+[ext_resource type="Texture2D" uid="uid://dwaae03lep0h2" path="res://Tactical Chess logo 001.png" id="2_m1f04"]
+[ext_resource type="StyleBox" uid="uid://cu0t7vds3ufck" path="res://themes/new_style_box_flat.tres" id="3_a43p3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t72w1"]
+bg_color = Color(0.427451, 0.717647, 1, 1)
+
+[sub_resource type="Theme" id="Theme_sfqph"]
+Button/styles/normal = ExtResource("3_a43p3")
+
+[node name="Main Menu" type="Node"]
+script = ExtResource("1_jbnnv")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_t72w1")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="Logo" type="TextureRect" parent="PanelContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("2_m1f04")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Spacer2" type="Control" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="New Game" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = SubResource("Theme_sfqph")
+text = "New Game"
+
+[node name="How To Play" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+disabled = true
+text = "How To Play"
+
+[node name="Spacer" type="Control" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[connection signal="button_up" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/New Game" to="." method="_on_new_game_pressed"]

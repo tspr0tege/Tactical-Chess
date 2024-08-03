@@ -28,10 +28,14 @@ func _on_texture_button_pressed():
 	
 	#If there is a piece
 	if is_instance_valid(tenant):
-		currentPlayer.points += GAME_BOARD.pieceValues[tenant.type_of_piece]
-		opposingPlayer.pieces.erase(tenant)
-		tenant.queue_free()
-		GAME_BOARD.updateBuyButtons()
+		if tenant.type_of_piece == "King":
+			#current player wins
+			GAME_BOARD.game_over()
+		else:
+			currentPlayer.points += GAME_BOARD.pieceValues[tenant.type_of_piece]
+			opposingPlayer.pieces.erase(tenant)
+			tenant.queue_free()
+			GAME_BOARD.updateBuyButtons()
 		
 	tenant = PIECE
 	

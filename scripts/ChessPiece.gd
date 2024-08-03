@@ -53,9 +53,10 @@ func _on_chesspiece_clicked():
 	GAME_BOARD.resetMoveTiles()
 	
 	if is_instance_valid(GAME_BOARD.NEW_PIECE) and GAME_BOARD.MOVING_PIECE == GAME_BOARD.NEW_PIECE:
+		#print("Deleting " + str(GAME_BOARD.MOVING_PIECE))
+		GAME_BOARD.NEW_PIECE = null
 		GAME_BOARD.MOVING_PIECE.queue_free()
 		GAME_BOARD.MOVING_PIECE = null
-		GAME_BOARD.NEW_PIECE = null
 	
 	if GAME_BOARD.MOVING_PIECE != self:
 		GAME_BOARD.MOVING_PIECE = self

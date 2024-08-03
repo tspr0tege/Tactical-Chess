@@ -19,11 +19,11 @@ const pieceValues = {
 var player = {
 	"White": {
 		"pieces": [],
-		"points": 1,
+		"points": 5,
 	},
 	"Black": {
 		"pieces": [],
-		"points": 0,
+		"points": 5,
 	},
 }
 
@@ -57,6 +57,7 @@ func _ready():
 				newChessPiece.coords = Vector2(x, y)
 				newChessPiece.is_moveable = true
 				add_child(newChessPiece)
+				player[color].pieces.push_back(newChessPiece)
 				newBoardTile.tenant = newChessPiece
 		
 		boardTiles.push_back(newRow)
@@ -101,8 +102,8 @@ func _on_buy_piece_button_up(piece_name):
 		print("No tiles available for new piece")
 
 func updatePoints():
-	$"../CanvasLayer/MarginContainer/HBoxContainer2/RichTextLabel".text = "[left]" + str(player.White.points) + "[/left]"
-	$"../CanvasLayer/MarginContainer/HBoxContainer2/RichTextLabel2".text = "[right]" + str(player.Black.points) + "[/right]"
+	$"../CanvasLayer/MarginContainer/HBoxContainer2/WhitePoints/Value".text = "[center]" + str(player.White.points) + "[/center]"
+	$"../CanvasLayer/MarginContainer/HBoxContainer2/BlackPoints/Value".text = "[center]" + str(player.Black.points) + "[/center]"
 
 func getMovementTiles(CHESS_PIECE):
 	var tilesArray = []
@@ -213,7 +214,7 @@ func getMovementTiles(CHESS_PIECE):
 			
 			if isValidTile.call(coords + Vector2(xDirection, 0)) and not is_instance_valid(boardTiles[coords.x + xDirection][coords.y].tenant): 
 				tilesArray.push_back(boardTiles[coords.x + xDirection][coords.y])
-				if CHESS_PIECE.first_move and isValidTile.call(coords + Vector2(xDirection * 2, 0)):
+				if CHESS_PIECE.first_move and isValidTile.call(coords + Vector2(xDirection * 2, 0)) and not is_instance_valid(boardTiles[coords.x + (xDirection * 2)][coords.y].tenant):
 					tilesArray.push_back(boardTiles[coords.x + (xDirection * 2)][coords.y])
 			
 		"Knight":
@@ -242,12 +243,13 @@ func getMovementTiles(CHESS_PIECE):
 
 func _on_end_turn_button_button_up():
 	resetMoveTiles()
+	if is_instance_valid(MOVING_PIECE) and MOVING_PIECE == NEW_PIECE:
+		NEW_PIECE = null
+		MOVING_PIECE.queue_free()
+		MOVING_PIECE = null
 	if is_instance_valid(NEW_PIECE):
 		NEW_PIECE.is_moveable = true
 		NEW_PIECE = null
-	if is_instance_valid(MOVING_PIECE) and MOVING_PIECE == NEW_PIECE:
-		MOVING_PIECE.queue_free()
-		MOVING_PIECE = null
 	
 	#Initialize new turn
 	playerTurn.reverse()
@@ -270,3 +272,9 @@ func _on_end_turn_button_button_up():
 func updateBuyButtons():
 	for button in $"../CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer".get_children():
 		button.isAvailable()
+
+func game_over():
+	$"../CanvasLayer".visible = false
+	var gameOverScreen = load("res://game_over.tscn").instantiate()
+	gameOverScreen.get_node("WinnerMessage").text = "[center]" + str(playerTurn[0]).to_upper() + " IS THE WINNER!"
+	get_parent().add_child(gameOverScreen)
