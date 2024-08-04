@@ -3,7 +3,6 @@ extends Node2D
 const blackPieces = preload("res://sprites/black_marble_sprites.tscn")
 const whitePieces = preload("res://sprites/white_marble_sprites.tscn")
 
-
 @onready var GAME_BOARD = find_parent("GameBoard")
 var first_move = true
 var type_of_piece
@@ -45,21 +44,25 @@ func createPiece(clr, type):
 
 func _on_chesspiece_clicked():
 	print("Clicked on " + str(color) + " " + str(type_of_piece))
-	#print("Coords: " + str(coords))
-	if not GAME_BOARD.playerTurn[0] == color: return
+	
+	if not GAME_BOARD.player[0].color == color: return
 	if not GAME_BOARD.moveAvailable: return
 	if not is_moveable: return
 	
 	GAME_BOARD.resetMoveTiles()
-	
-	if is_instance_valid(GAME_BOARD.NEW_PIECE) and GAME_BOARD.MOVING_PIECE == GAME_BOARD.NEW_PIECE:
-		#print("Deleting " + str(GAME_BOARD.MOVING_PIECE))
-		GAME_BOARD.NEW_PIECE = null
-		GAME_BOARD.MOVING_PIECE.queue_free()
-		GAME_BOARD.MOVING_PIECE = null
+	GAME_BOARD.clearBuyBox()
 	
 	if GAME_BOARD.MOVING_PIECE != self:
 		GAME_BOARD.MOVING_PIECE = self
+		
+		var inBackRow = func():
+			if color == "Black" and coords.x == 1: return true
+			if color == "White" and coords.x == 6: return true
+			return false
+		# TODO: Check back row for piece sacrifice (get 2 points)
+		if type_of_piece == "Pawn" and inBackRow.call():
+			var sacrificePopup = load("res://sacrifice_pawn.tscn").instantiate()
+			find_parent("Main").add_child(sacrificePopup)
 		
 		var movementTiles = GAME_BOARD.getMovementTiles(self)
 		for tile in movementTiles:
@@ -73,4 +76,3 @@ func _on_chesspiece_clicked():
 func moveTo(pos):
 	var tween = create_tween()
 	tween.tween_property(self, "position", pos, .25)
-

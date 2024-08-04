@@ -7,7 +7,7 @@ func _ready():
 	isAvailable()
 
 func isAvailable():
-	var availablePoints = GAME_BOARD.player[GAME_BOARD.playerTurn[0]].points
+	var availablePoints = GAME_BOARD.player[0].points
 	if availablePoints >= GAME_BOARD.pieceValues[piece]:
 		self.disabled = false
 	else:

@@ -6,8 +6,9 @@ var tenant
 
 func _on_texture_button_pressed():
 	var PIECE = GAME_BOARD.MOVING_PIECE
-	var currentPlayer = GAME_BOARD.player[GAME_BOARD.playerTurn[0]]
-	var opposingPlayer = GAME_BOARD.player[GAME_BOARD.playerTurn[1]]
+	var currentPlayer = GAME_BOARD.player[0]
+	var opposingPlayer = GAME_BOARD.player[1]
+	#print(str(PIECE.coords == null))
 	
 	print("Moving " + PIECE.color +" "+ PIECE.type_of_piece + " to " + str(coords))
 	
@@ -15,7 +16,7 @@ func _on_texture_button_pressed():
 		GAME_BOARD.boardTiles[PIECE.coords.x][PIECE.coords.y].queue_free()
 	
 	#Moving a newly deployed piece onto the board
-	if is_instance_valid(GAME_BOARD.NEW_PIECE) and GAME_BOARD.NEW_PIECE == GAME_BOARD.MOVING_PIECE:
+	if PIECE.coords == null:
 		currentPlayer.points -= GAME_BOARD.pieceValues[PIECE.type_of_piece]
 		currentPlayer.pieces.push_back(PIECE)
 		GAME_BOARD.updateBuyButtons()
