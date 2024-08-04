@@ -19,11 +19,11 @@ const pieceValues = {
 var player = {
 	"White": {
 		"pieces": [],
-		"points": 5,
+		"points": 1,
 	},
 	"Black": {
 		"pieces": [],
-		"points": 5,
+		"points": 0,
 	},
 }
 
@@ -250,6 +250,10 @@ func _on_end_turn_button_button_up():
 	if is_instance_valid(NEW_PIECE):
 		NEW_PIECE.is_moveable = true
 		NEW_PIECE = null
+		
+	if player[playerTurn[0]].points >= 20:
+		game_over()
+		return
 	
 	#Initialize new turn
 	playerTurn.reverse()

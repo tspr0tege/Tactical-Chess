@@ -2,10 +2,7 @@ extends Node2D
 
 var coords
 var tenant
-var GAME_BOARD
-
-func _ready():
-	GAME_BOARD = find_parent("GameBoard")	
+@onready var GAME_BOARD = find_parent("GameBoard")
 
 func _on_texture_button_pressed():
 	var PIECE = GAME_BOARD.MOVING_PIECE
@@ -13,6 +10,11 @@ func _on_texture_button_pressed():
 	var opposingPlayer = GAME_BOARD.player[GAME_BOARD.playerTurn[1]]
 	
 	print("Moving " + PIECE.color +" "+ PIECE.type_of_piece + " to " + str(coords))
+	
+	if PIECE.type_of_piece == "King" and PIECE.first_move:
+		GAME_BOARD.boardTiles[PIECE.coords.x][PIECE.coords.y].queue_free()
+	
+	#Moving a newly deployed piece onto the board
 	if is_instance_valid(GAME_BOARD.NEW_PIECE) and GAME_BOARD.NEW_PIECE == GAME_BOARD.MOVING_PIECE:
 		currentPlayer.points -= GAME_BOARD.pieceValues[PIECE.type_of_piece]
 		currentPlayer.pieces.push_back(PIECE)
@@ -22,6 +24,7 @@ func _on_texture_button_pressed():
 		GAME_BOARD.boardTiles[PIECE.coords.x][PIECE.coords.y].tenant = null
 		GAME_BOARD.moveAvailable = false
 		PIECE.first_move = false
+	
 	PIECE.coords = coords
 	PIECE.z_index = self.z_index + 1
 	PIECE.moveTo(self.position)

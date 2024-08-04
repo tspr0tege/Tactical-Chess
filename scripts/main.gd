@@ -3,19 +3,18 @@ extends Node2D
 @onready var SCENE_LOADER = find_parent("Scene Loader")
 
 func _on_restart_button_down():
-	if SCENE_LOADER != null:
-		print("Starting new game!")
-		find_parent("Scene Loader").load_new_game()
-	else:
+	if SCENE_LOADER == null:
 		print("No Scene Loader is present")
+		return 
+	
+	print("Starting new game!")
+	SCENE_LOADER.load_new_game()
 
 
-func _on_quit_button_down():	
-	if SCENE_LOADER != null:
-		print("Exiting to main menu")
-		find_parent("Scene Loader").load_main_menu()
-	else:
+func _on_quit_button_down():
+	if SCENE_LOADER == null:
 		print("No Scene Loader is present")
-
-func gameOver(winner):
-	pass
+		return 
+	
+	print("Starting new game!")
+	SCENE_LOADER.load_main_menu()
