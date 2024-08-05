@@ -1,9 +1,21 @@
-[gd_scene load_steps=5 format=3 uid="uid://gnigemb2g7pn"]
+[gd_scene load_steps=9 format=3 uid="uid://gnigemb2g7pn"]
 
 [ext_resource type="Script" path="res://scripts/GameBoard.gd" id="1_4go1m"]
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_ocna6"]
 [ext_resource type="Script" path="res://scripts/BuyButtons.gd" id="2_50bpa"]
+[ext_resource type="Texture2D" uid="uid://cd3pvwmn4kykx" path="res://move.svg" id="3_e51bq"]
 [ext_resource type="Script" path="res://scripts/MenuButton.gd" id="3_ksqjo"]
+[ext_resource type="Texture2D" uid="uid://bum1wehl7q53x" path="res://chess-pawn.svg" id="4_w1lwr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nefxe"]
+bg_color = Color(0.6, 0.6, 0.6, 0.282353)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p00hg"]
+bg_color = Color(0.214844, 0.214844, 0.214844, 1)
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_ocna6")
@@ -14,11 +26,60 @@ script = ExtResource("1_4go1m")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="EndTurnButton" type="Button" parent="CanvasLayer"]
-offset_left = 1039.0
-offset_top = 312.0
-offset_right = 1117.0
-offset_bottom = 343.0
+[node name="RightPanel" type="PanelContainer" parent="CanvasLayer"]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -78.0
+offset_top = -20.0
+offset_bottom = 20.0
+grow_horizontal = 0
+grow_vertical = 2
+size_flags_horizontal = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_nefxe")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/RightPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="TurnControls" type="VBoxContainer" parent="CanvasLayer/RightPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="AvailableActions" type="HBoxContainer" parent="CanvasLayer/RightPanel/MarginContainer/TurnControls"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="MoveAvailable" type="PanelContainer" parent="CanvasLayer/RightPanel/MarginContainer/TurnControls/AvailableActions"]
+modulate = Color(0.2, 1, 0.2, 1)
+layout_mode = 2
+tooltip_text = "Move available"
+theme_override_styles/panel = SubResource("StyleBoxFlat_p00hg")
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/RightPanel/MarginContainer/TurnControls/AvailableActions/MoveAvailable"]
+layout_mode = 2
+texture = ExtResource("3_e51bq")
+expand_mode = 2
+
+[node name="BuyAvailable" type="PanelContainer" parent="CanvasLayer/RightPanel/MarginContainer/TurnControls/AvailableActions"]
+modulate = Color(0.2, 1, 0.2, 1)
+clip_contents = true
+layout_mode = 2
+tooltip_text = "New piece available"
+theme_override_styles/panel = SubResource("StyleBoxFlat_p00hg")
+
+[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/RightPanel/MarginContainer/TurnControls/AvailableActions/BuyAvailable"]
+layout_mode = 2
+texture = ExtResource("4_w1lwr")
+expand_mode = 2
+
+[node name="EndTurnButton" type="Button" parent="CanvasLayer/RightPanel/MarginContainer/TurnControls"]
+layout_mode = 2
 text = "End Turn"
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer"]
@@ -161,7 +222,7 @@ text = "QUIT"
 layout_mode = 2
 size_flags_vertical = 3
 
-[connection signal="button_up" from="CanvasLayer/EndTurnButton" to="GameBoard" method="_on_end_turn_button_button_up"]
+[connection signal="button_up" from="CanvasLayer/RightPanel/MarginContainer/TurnControls/EndTurnButton" to="GameBoard" method="_on_end_turn_button_button_up"]
 [connection signal="button_up" from="CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer/PawnButton" to="GameBoard" method="_on_buy_piece_button_up" binds= ["Pawn"]]
 [connection signal="button_up" from="CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer/BishopButton" to="GameBoard" method="_on_buy_piece_button_up" binds= ["Bishop"]]
 [connection signal="button_up" from="CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer/KnightButton" to="GameBoard" method="_on_buy_piece_button_up" binds= ["Knight"]]

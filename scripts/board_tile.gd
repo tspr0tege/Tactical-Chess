@@ -20,10 +20,10 @@ func _on_texture_button_pressed():
 		currentPlayer.points -= GAME_BOARD.pieceValues[PIECE.type_of_piece]
 		currentPlayer.pieces.push_back(PIECE)
 		GAME_BOARD.updateBuyButtons()
-		GAME_BOARD.buyAvailable = false
+		GAME_BOARD.updateBuyAvailable(false)
 	else:
 		GAME_BOARD.boardTiles[PIECE.coords.x][PIECE.coords.y].tenant = null
-		GAME_BOARD.moveAvailable = false
+		GAME_BOARD.updateMoveAvailable(false)
 		PIECE.first_move = false
 	
 	PIECE.coords = coords
@@ -46,4 +46,3 @@ func _on_texture_button_pressed():
 	GAME_BOARD.resetMoveTiles()
 	GAME_BOARD.MOVING_PIECE = null
 	GAME_BOARD.updatePoints()
-	#GAME_BOARD.creatingPiece = false

@@ -2,6 +2,8 @@ extends Node2D
 
 const BoardTile = preload("res://board_tile.tscn")
 const ChessPiece = preload("res://chess_piece.tscn")
+@onready var MoveAvailableControl = $"../CanvasLayer/RightPanel/MarginContainer/TurnControls/AvailableActions/MoveAvailable"
+@onready var BuyAvailableControl = $"../CanvasLayer/RightPanel/MarginContainer/TurnControls/AvailableActions/BuyAvailable"
 
 var boardTiles = []
 var MOVING_PIECE = null
@@ -90,9 +92,19 @@ func clearBuyBox():
 		MOVING_PIECE.queue_free()
 		MOVING_PIECE = null
 
+func updateBuyAvailable(bool):
+	buyAvailable = bool
+	BuyAvailableControl.modulate = "#33ff33" if bool else "#cc4466"
+	BuyAvailableControl.tooltip_text = "New piece available" if bool else "New piece not available"
+	
+func updateMoveAvailable(bool):
+	moveAvailable = bool
+	MoveAvailableControl.modulate = "#33ff33" if bool else "#cc4466"
+	MoveAvailableControl.tooltip_text = "Move available" if bool else "Move not available"
+
 func sacrificePawn():
 	resetMoveTiles()
-	moveAvailable = false
+	updateMoveAvailable(false)
 	player[0].points += 2
 	player[0].pieces.erase(MOVING_PIECE)
 	MOVING_PIECE.queue_free()
@@ -251,8 +263,8 @@ func _on_end_turn_button_button_up():
 	#Initialize new turn
 	player.reverse()
 	player[0].points += 1
-	moveAvailable = true
-	buyAvailable = true
+	updateMoveAvailable(true)
+	updateBuyAvailable(true)
 	updatePoints()
 	
 	for piece in player[0].pieces:
