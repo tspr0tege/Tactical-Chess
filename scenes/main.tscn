@@ -1,11 +1,13 @@
-[gd_scene load_steps=9 format=3 uid="uid://gnigemb2g7pn"]
+[gd_scene load_steps=11 format=3 uid="uid://gnigemb2g7pn"]
 
-[ext_resource type="Script" path="res://scripts/GameBoard.gd" id="1_4go1m"]
-[ext_resource type="Script" path="res://scripts/main.gd" id="1_ocna6"]
-[ext_resource type="Script" path="res://scripts/BuyButtons.gd" id="2_50bpa"]
-[ext_resource type="Texture2D" uid="uid://cd3pvwmn4kykx" path="res://move.svg" id="3_e51bq"]
-[ext_resource type="Script" path="res://scripts/MenuButton.gd" id="3_ksqjo"]
-[ext_resource type="Texture2D" uid="uid://bum1wehl7q53x" path="res://chess-pawn.svg" id="4_w1lwr"]
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_n8utc"]
+[ext_resource type="Script" path="res://scripts/GameBoard.gd" id="2_ofa78"]
+[ext_resource type="Theme" uid="uid://bkh3fp6sjq801" path="res://themes/white_player_turn_theme.tres" id="3_rdkri"]
+[ext_resource type="Texture2D" uid="uid://cd3pvwmn4kykx" path="res://move.svg" id="4_sflqm"]
+[ext_resource type="Texture2D" uid="uid://bum1wehl7q53x" path="res://chess-pawn.svg" id="5_agrjk"]
+[ext_resource type="Script" path="res://scripts/PointsInit.gd" id="7_2fb74"]
+[ext_resource type="Script" path="res://scripts/BuyButtons.gd" id="8_rmqtf"]
+[ext_resource type="Script" path="res://scripts/MenuButton.gd" id="9_gwtr1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nefxe"]
 bg_color = Color(0.6, 0.6, 0.6, 0.282353)
@@ -18,11 +20,11 @@ corner_radius_bottom_right = 25
 corner_radius_bottom_left = 25
 
 [node name="Main" type="Node2D"]
-script = ExtResource("1_ocna6")
+script = ExtResource("1_n8utc")
 
 [node name="GameBoard" type="Node2D" parent="."]
 position = Vector2(200, 200)
-script = ExtResource("1_4go1m")
+script = ExtResource("2_ofa78")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -38,6 +40,7 @@ offset_bottom = 20.0
 grow_horizontal = 0
 grow_vertical = 2
 size_flags_horizontal = 8
+theme = ExtResource("3_rdkri")
 theme_override_styles/panel = SubResource("StyleBoxFlat_nefxe")
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/RightPanel"]
@@ -63,7 +66,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_p00hg")
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/RightPanel/MarginContainer/TurnControls/AvailableActions/MoveAvailable"]
 layout_mode = 2
-texture = ExtResource("3_e51bq")
+texture = ExtResource("4_sflqm")
 expand_mode = 2
 
 [node name="BuyAvailable" type="PanelContainer" parent="CanvasLayer/RightPanel/MarginContainer/TurnControls/AvailableActions"]
@@ -75,7 +78,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_p00hg")
 
 [node name="TextureRect2" type="TextureRect" parent="CanvasLayer/RightPanel/MarginContainer/TurnControls/AvailableActions/BuyAvailable"]
 layout_mode = 2
-texture = ExtResource("4_w1lwr")
+texture = ExtResource("5_agrjk")
 expand_mode = 2
 
 [node name="EndTurnButton" type="Button" parent="CanvasLayer/RightPanel/MarginContainer/TurnControls"]
@@ -89,6 +92,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 0
+theme = ExtResource("3_rdkri")
 theme_override_constants/margin_left = 50
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 50
@@ -114,6 +118,7 @@ size_flags_horizontal = 3
 bbcode_enabled = true
 text = "[left]White Points[/left]"
 fit_content = true
+script = ExtResource("7_2fb74")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MarginContainer/HBoxContainer2"]
 layout_mode = 2
@@ -126,35 +131,35 @@ layout_mode = 2
 size_flags_horizontal = 3
 disabled = true
 text = "Pawn (1)"
-script = ExtResource("2_50bpa")
+script = ExtResource("8_rmqtf")
 
 [node name="BishopButton" type="Button" parent="CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 disabled = true
 text = "Bishop (2)"
-script = ExtResource("2_50bpa")
+script = ExtResource("8_rmqtf")
 
 [node name="KnightButton" type="Button" parent="CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 disabled = true
 text = "Knight (3)"
-script = ExtResource("2_50bpa")
+script = ExtResource("8_rmqtf")
 
 [node name="RookButton" type="Button" parent="CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 disabled = true
 text = "Rook (5)"
-script = ExtResource("2_50bpa")
+script = ExtResource("8_rmqtf")
 
 [node name="QueenButton" type="Button" parent="CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 disabled = true
 text = "Queen (9)"
-script = ExtResource("2_50bpa")
+script = ExtResource("8_rmqtf")
 
 [node name="BlackPoints" type="VBoxContainer" parent="CanvasLayer/MarginContainer/HBoxContainer2"]
 layout_mode = 2
@@ -173,6 +178,7 @@ size_flags_horizontal = 3
 bbcode_enabled = true
 text = "[right]Black Points[/right]"
 fit_content = true
+script = ExtResource("7_2fb74")
 
 [node name="MenuContainer" type="MarginContainer" parent="CanvasLayer"]
 offset_right = 40.0
@@ -185,7 +191,7 @@ theme_override_constants/margin_bottom = 20
 [node name="MenuButton" type="MenuButton" parent="CanvasLayer/MenuContainer"]
 layout_mode = 2
 text = "MENU"
-script = ExtResource("3_ksqjo")
+script = ExtResource("9_gwtr1")
 
 [node name="PopupMenu" type="PopupMenu" parent="CanvasLayer/MenuContainer/MenuButton"]
 initial_position = 1

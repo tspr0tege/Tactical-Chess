@@ -1,0 +1,41 @@
+[gd_resource type="Theme" load_steps=5 format=3 uid="uid://bkh3fp6sjq801"]
+
+[ext_resource type="Texture2D" uid="uid://cmekm203t3mnc" path="res://sprites/Themes/White Button.png" id="1_tqwpi"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5q1im"]
+texture = ExtResource("1_tqwpi")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
+axis_stretch_horizontal = 1
+modulate_color = Color(0.560784, 0.560784, 0.560784, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bmvh1"]
+texture = ExtResource("1_tqwpi")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
+axis_stretch_horizontal = 1
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_iajgb"]
+texture = ExtResource("1_tqwpi")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
+modulate_color = Color(0.372549, 0.372549, 0.372549, 1)
+
+[resource]
+Button/colors/font_color = Color(0.109804, 0.109804, 0.109804, 1)
+Button/colors/font_disabled_color = Color(0.0980392, 0.0980392, 0.0980392, 0.501961)
+Button/colors/font_focus_color = Color(0.239216, 0.239216, 0.239216, 1)
+Button/colors/font_hover_color = Color(0.937255, 0.937255, 0.937255, 1)
+Button/colors/font_hover_pressed_color = Color(0.262745, 0.262745, 0.262745, 1)
+Button/colors/font_outline_color = Color(0.384314, 0.384314, 0.384314, 1)
+Button/colors/font_pressed_color = Color(1, 1, 1, 1)
+Button/constants/outline_size = 3
+Button/styles/hover = SubResource("StyleBoxTexture_5q1im")
+Button/styles/normal = SubResource("StyleBoxTexture_bmvh1")
+Button/styles/pressed = SubResource("StyleBoxTexture_iajgb")

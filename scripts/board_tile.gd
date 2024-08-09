@@ -17,9 +17,9 @@ func _on_texture_button_pressed():
 	
 	#Moving a newly deployed piece onto the board
 	if PIECE.coords == null:
-		currentPlayer.points -= GAME_BOARD.pieceValues[PIECE.type_of_piece]
+		#currentPlayer.points -= GAME_BOARD.pieceValues[PIECE.type_of_piece]
+		GAME_BOARD.updatePoints(-GAME_BOARD.pieceValues[PIECE.type_of_piece])
 		currentPlayer.pieces.push_back(PIECE)
-		GAME_BOARD.updateBuyButtons()
 		GAME_BOARD.updateBuyAvailable(false)
 	else:
 		GAME_BOARD.boardTiles[PIECE.coords.x][PIECE.coords.y].tenant = null
@@ -36,13 +36,12 @@ func _on_texture_button_pressed():
 			#current player wins
 			GAME_BOARD.game_over()
 		else:
-			currentPlayer.points += GAME_BOARD.pieceValues[tenant.type_of_piece]
+			#currentPlayer.points += GAME_BOARD.pieceValues[tenant.type_of_piece]
+			GAME_BOARD.updatePoints(GAME_BOARD.pieceValues[tenant.type_of_piece])
 			opposingPlayer.pieces.erase(tenant)
 			tenant.queue_free()
-			GAME_BOARD.updateBuyButtons()
 		
 	tenant = PIECE
 	
 	GAME_BOARD.resetMoveTiles()
 	GAME_BOARD.MOVING_PIECE = null
-	GAME_BOARD.updatePoints()

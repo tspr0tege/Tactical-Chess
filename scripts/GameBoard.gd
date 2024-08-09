@@ -1,9 +1,11 @@
 extends Node2D
 
-const BoardTile = preload("res://board_tile.tscn")
-const ChessPiece = preload("res://chess_piece.tscn")
+const BoardTile = preload("res://scenes/board_tile.tscn")
+const ChessPiece = preload("res://scenes/chess_piece.tscn")
 @onready var MoveAvailableControl = $"../CanvasLayer/RightPanel/MarginContainer/TurnControls/AvailableActions/MoveAvailable"
 @onready var BuyAvailableControl = $"../CanvasLayer/RightPanel/MarginContainer/TurnControls/AvailableActions/BuyAvailable"
+@onready var RightPanelUI = $"../CanvasLayer/RightPanel"
+@onready var BottomPanelUI = $"../CanvasLayer/MarginContainer"
 
 var boardTiles = []
 var MOVING_PIECE = null
@@ -22,12 +24,14 @@ var player = [
 		"pieces": [],
 		"points": 1,
 		"spawn_columns": [1, 2],
+		"button_theme": "res://themes/white_player_turn_theme.tres",
 	},
 	{
 		"color": "Black",
 		"pieces": [],
 		"points": 0,
 		"spawn_columns": [5, 6],
+		"button_theme": "res://themes/black_player_turn_theme.tres",
 	},
 ]
 
@@ -70,7 +74,7 @@ func _ready():
 				newBoardTile.tenant = newChessPiece
 		
 		boardTiles.push_back(newRow)
-		updatePoints()
+		#initializeTurn()
 
 func resetMoveTiles():
 	for x in boardTiles:
@@ -79,11 +83,10 @@ func resetMoveTiles():
 				tile.get_node("TextureButton").visible = false
 				tile.get_node("TextureButton/Polygon2D").color = "#00ff00"
 
-func updatePoints():
+func updatePoints(value):
+	player[0].points += value
 	player[0].points_display.text = "[center]" + str(player[0].points) + "[/center]"
-	player[1].points_display.text = "[center]" + str(player[1].points) + "[/center]"
-
-func updateBuyButtons():
+	#player[1].points_display.text = "[center]" + str(player[1].points) + "[/center]"
 	for button in $"../CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer".get_children():
 		button.isAvailable()
 
@@ -105,11 +108,26 @@ func updateMoveAvailable(bool):
 func sacrificePawn():
 	resetMoveTiles()
 	updateMoveAvailable(false)
-	player[0].points += 2
+	updatePoints(2)
 	player[0].pieces.erase(MOVING_PIECE)
 	MOVING_PIECE.queue_free()
-	updatePoints()
-	updateBuyButtons()
+
+func initializeTurn():
+	RightPanelUI.theme = load(player[0].button_theme)
+	BottomPanelUI.theme = load(player[0].button_theme)
+	updateMoveAvailable(true)
+	updateBuyAvailable(true)
+	updatePoints(1)
+	
+	for piece in player[0].pieces:
+		var TEXTURE_BUTTON = piece.get_node("TextureButton")
+		TEXTURE_BUTTON.disabled = false
+		TEXTURE_BUTTON.set_mouse_filter(0)
+	
+	for piece in player[1].pieces:
+		var TEXTURE_BUTTON = piece.get_node("TextureButton")
+		TEXTURE_BUTTON.disabled = true
+		TEXTURE_BUTTON.set_mouse_filter(2)
 
 func getMovementTiles(CHESS_PIECE):
 	var tilesArray = []
@@ -262,22 +280,7 @@ func _on_end_turn_button_button_up():
 		
 	#Initialize new turn
 	player.reverse()
-	player[0].points += 1
-	updateMoveAvailable(true)
-	updateBuyAvailable(true)
-	updatePoints()
-	
-	for piece in player[0].pieces:
-		var TEXTURE_BUTTON = piece.get_node("TextureButton")
-		TEXTURE_BUTTON.disabled = false
-		TEXTURE_BUTTON.set_mouse_filter(0)
-	
-	for piece in player[1].pieces:
-		var TEXTURE_BUTTON = piece.get_node("TextureButton")
-		TEXTURE_BUTTON.disabled = true
-		TEXTURE_BUTTON.set_mouse_filter(2)
-		
-	updateBuyButtons()
+	initializeTurn()
 
 func _on_buy_piece_button_up(piece_name):
 	resetMoveTiles()

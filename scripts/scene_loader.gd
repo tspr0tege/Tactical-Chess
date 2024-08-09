@@ -5,12 +5,12 @@ func _ready():
 
 func load_new_game():
 	unloadChildren()
-	var gameScene = load("res://main.tscn").instantiate()
+	var gameScene = load("res://scenes/main.tscn").instantiate()
 	add_child(gameScene)
 
 func load_main_menu():
 	unloadChildren()
-	var mainMenu = load("res://main_menu.tscn").instantiate()
+	var mainMenu = load("res://scenes/main_menu.tscn").instantiate()
 	add_child(mainMenu)
 
 func unloadChildren():

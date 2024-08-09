@@ -1,21 +1,21 @@
 [gd_scene load_steps=3 format=3 uid="uid://dqgg2uj5yw3r2"]
 
-[ext_resource type="Script" path="res://scripts/GameOver.gd" id="1_ds287"]
+[ext_resource type="Script" path="res://scripts/GameOver.gd" id="1_5t705"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7b1g4"]
 bg_color = Color(0, 0, 0, 0.756863)
 
 [node name="Game Over" type="Panel"]
 z_index = 1000
-custom_minimum_size = Vector2(1152, 648)
+custom_minimum_size = Vector2(900, 600)
 layout_direction = 1
-offset_right = 1152.0
-offset_bottom = 648.0
+offset_right = 900.0
+offset_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_force_pass_scroll_events = false
 theme_override_styles/panel = SubResource("StyleBoxFlat_7b1g4")
-script = ExtResource("1_ds287")
+script = ExtResource("1_5t705")
 
 [node name="WinnerMessage" type="RichTextLabel" parent="."]
 layout_mode = 1

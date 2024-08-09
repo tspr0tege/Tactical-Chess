@@ -1,17 +1,17 @@
 [gd_scene load_steps=6 format=3 uid="uid://bqtwxkov74ha1"]
 
-[ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_jbnnv"]
-[ext_resource type="Texture2D" uid="uid://dwaae03lep0h2" path="res://Tactical Chess logo 001.png" id="2_m1f04"]
-[ext_resource type="StyleBox" uid="uid://cu0t7vds3ufck" path="res://themes/new_style_box_flat.tres" id="3_a43p3"]
+[ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_0rn4f"]
+[ext_resource type="Texture2D" uid="uid://dwaae03lep0h2" path="res://Tactical Chess logo 001.png" id="2_5j74i"]
+[ext_resource type="StyleBox" uid="uid://cu0t7vds3ufck" path="res://themes/new_style_box_flat.tres" id="3_1aeqk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t72w1"]
 bg_color = Color(0.427451, 0.717647, 1, 1)
 
 [sub_resource type="Theme" id="Theme_sfqph"]
-Button/styles/normal = ExtResource("3_a43p3")
+Button/styles/normal = ExtResource("3_1aeqk")
 
 [node name="Main Menu" type="Node"]
-script = ExtResource("1_jbnnv")
+script = ExtResource("1_0rn4f")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 anchors_preset = 15
@@ -26,7 +26,7 @@ layout_mode = 2
 
 [node name="Logo" type="TextureRect" parent="PanelContainer/HBoxContainer"]
 layout_mode = 2
-texture = ExtResource("2_m1f04")
+texture = ExtResource("2_5j74i")
 expand_mode = 2
 stretch_mode = 4
 

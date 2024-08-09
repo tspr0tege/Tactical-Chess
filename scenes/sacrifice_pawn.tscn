@@ -1,21 +1,19 @@
 [gd_scene load_steps=3 format=3 uid="uid://drxd6my450jjn"]
 
-[ext_resource type="Script" path="res://scripts/sacrifice_pawn.gd" id="1_tfnjm"]
+[ext_resource type="Script" path="res://scripts/sacrifice_pawn.gd" id="1_fafpu"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7b1g4"]
 bg_color = Color(0, 0, 0, 0.756863)
 
 [node name="Sacrifice Pawn" type="Panel"]
 z_index = 1000
-custom_minimum_size = Vector2(1152, 648)
+custom_minimum_size = Vector2(900, 600)
 layout_direction = 1
-offset_right = 1152.0
-offset_bottom = 648.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_force_pass_scroll_events = false
 theme_override_styles/panel = SubResource("StyleBoxFlat_7b1g4")
-script = ExtResource("1_tfnjm")
+script = ExtResource("1_fafpu")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 1

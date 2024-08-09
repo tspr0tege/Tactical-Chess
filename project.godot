@@ -11,9 +11,14 @@ config_version=5
 [application]
 
 config/name="Tactical Chess"
-run/main_scene="res://scene_loader.tscn"
+run/main_scene="res://scenes/scene_loader.tscn"
 config/features=PackedStringArray("4.1", "Mobile")
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=900
+window/size/viewport_height=600
 
 [rendering]
 
