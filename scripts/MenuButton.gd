@@ -1,4 +1,4 @@
 extends MenuButton
 
-func _on_toggled(button_pressed):
-	$PopupMenu.visible = button_pressed
+func _on_toggled(boolean):
+	$PopupMenu.visible = boolean

@@ -6,7 +6,8 @@ func _ready():
 func load_new_game():
 	unloadChildren()
 	var gameScene = load("res://scenes/main.tscn").instantiate()
-	add_child(gameScene)
+	gameScene.name = "Main"
+	add_child(gameScene, true)
 
 func load_main_menu():
 	unloadChildren()
@@ -15,4 +16,5 @@ func load_main_menu():
 
 func unloadChildren():
 	for child in self.get_children():
+		child.name = str(randi())
 		child.queue_free()

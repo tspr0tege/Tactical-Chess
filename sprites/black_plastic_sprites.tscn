@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://c6wgbdq2crrb0"]
+
+[ext_resource type="Texture2D" uid="uid://j0yb67xwyvfd" path="res://sprites/Top Down/Pieces/Black/Black - Plastic 1 128x128.png" id="1_cymqa"]
+
+[node name="BlackPlasticSprites" type="Sprite2D"]
+z_index = 100
+texture = ExtResource("1_cymqa")
+offset = Vector2(0, -26)
+hframes = 4
+vframes = 4
+frame = 12

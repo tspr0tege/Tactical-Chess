@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://cs38i11c53cyl"]
+
+[ext_resource type="Texture2D" uid="uid://do26d7avhiqmd" path="res://sprites/Top Down/Pieces/White/White - Plastic 1 128x128.png" id="1_taiuc"]
+
+[node name="WhitePlasticSprites" type="Sprite2D"]
+z_index = 100
+texture = ExtResource("1_taiuc")
+offset = Vector2(0, -26)
+hframes = 4
+vframes = 4
+frame = 12

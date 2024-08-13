@@ -1,7 +1,7 @@
 extends Node2D
 
-const blackPieces = preload("res://sprites/black_marble_sprites.tscn")
-const whitePieces = preload("res://sprites/white_marble_sprites.tscn")
+const blackPieces = preload("res://sprites/black_plastic_sprites.tscn")
+const whitePieces = preload("res://sprites/white_plastic_sprites.tscn")
 
 @onready var GAME_BOARD = find_parent("GameBoard")
 var first_move = true

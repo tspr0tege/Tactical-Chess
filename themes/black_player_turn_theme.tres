@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=5 format=3 uid="uid://bh5vs6jutfowx"]
+[gd_resource type="Theme" load_steps=6 format=3 uid="uid://bh5vs6jutfowx"]
 
 [ext_resource type="Texture2D" uid="uid://ba8fimgoi68jm" path="res://sprites/Themes/Black Button.png" id="1_yq7uo"]
 
@@ -28,7 +28,11 @@ texture_margin_bottom = 8.0
 axis_stretch_horizontal = 1
 modulate_color = Color(0.486275, 0.486275, 0.486275, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dj2wh"]
+bg_color = Color(0.266667, 0.266667, 0.266667, 1)
+
 [resource]
 Button/styles/hover = SubResource("StyleBoxTexture_k7kw6")
 Button/styles/normal = SubResource("StyleBoxTexture_itfq7")
 Button/styles/pressed = SubResource("StyleBoxTexture_ahhxa")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_dj2wh")

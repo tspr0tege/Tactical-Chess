@@ -2,42 +2,20 @@ extends Node2D
 
 const BoardTile = preload("res://scenes/board_tile.tscn")
 const ChessPiece = preload("res://scenes/chess_piece.tscn")
-@onready var MoveAvailableControl = $"../CanvasLayer/RightPanel/MarginContainer/TurnControls/AvailableActions/MoveAvailable"
-@onready var BuyAvailableControl = $"../CanvasLayer/RightPanel/MarginContainer/TurnControls/AvailableActions/BuyAvailable"
-@onready var RightPanelUI = $"../CanvasLayer/RightPanel"
-@onready var BottomPanelUI = $"../CanvasLayer/MarginContainer"
+#@onready var MoveAvailableControl = $"../CanvasLayer/RightPanel/MarginContainer/TurnControls/AvailableActions/MoveAvailable"
+#@onready var BuyAvailableControl = $"../CanvasLayer/RightPanel/MarginContainer/TurnControls/AvailableActions/BuyAvailable"
+@onready var MAIN = find_parent("Main")
+@onready var player = MAIN.player
+@onready var pieceValues = MAIN.pieceValues
 
 var boardTiles = []
 var MOVING_PIECE = null
 var moveAvailable = true
 var buyAvailable = true
-const pieceValues = {
-	"Pawn": 1,
-	"Bishop": 2,
-	"Knight": 3,
-	"Rook": 5,
-	"Queen": 9,
-}
-var player = [
-	{
-		"color": "White",
-		"pieces": [],
-		"points": 1,
-		"spawn_columns": [1, 2],
-		"button_theme": "res://themes/white_player_turn_theme.tres",
-	},
-	{
-		"color": "Black",
-		"pieces": [],
-		"points": 0,
-		"spawn_columns": [5, 6],
-		"button_theme": "res://themes/black_player_turn_theme.tres",
-	},
-]
 
 func _ready():
-	player[0].points_display = get_node("../CanvasLayer/MarginContainer/HBoxContainer2/WhitePoints/Value")
-	player[1].points_display = get_node("../CanvasLayer/MarginContainer/HBoxContainer2/BlackPoints/Value")
+	#player[0].points_display = MAIN.WHITE_POINTS
+	#player[1].points_display = MAIN.BLACK_POINTS
 	var isACorner = func (x, y):
 		return (x == 0 or x == 7) and (y == 0 or y == 2)
 	
@@ -85,9 +63,9 @@ func resetMoveTiles():
 
 func updatePoints(value):
 	player[0].points += value
-	player[0].points_display.text = "[center]" + str(player[0].points) + "[/center]"
+	player[0].points_display.text = str(player[0].points)
 	#player[1].points_display.text = "[center]" + str(player[1].points) + "[/center]"
-	for button in $"../CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer".get_children():
+	for button in MAIN.BUY_BUTTONS_CONTAINER.get_children():
 		button.isAvailable()
 
 func clearBuyBox():
@@ -95,15 +73,11 @@ func clearBuyBox():
 		MOVING_PIECE.queue_free()
 		MOVING_PIECE = null
 
-func updateBuyAvailable(bool):
-	buyAvailable = bool
-	BuyAvailableControl.modulate = "#33ff33" if bool else "#cc4466"
-	BuyAvailableControl.tooltip_text = "New piece available" if bool else "New piece not available"
+func updateBuyAvailable(boolean):
+	buyAvailable = boolean
 	
-func updateMoveAvailable(bool):
-	moveAvailable = bool
-	MoveAvailableControl.modulate = "#33ff33" if bool else "#cc4466"
-	MoveAvailableControl.tooltip_text = "Move available" if bool else "Move not available"
+func updateMoveAvailable(boolean):
+	moveAvailable = boolean
 
 func sacrificePawn():
 	resetMoveTiles()
@@ -113,8 +87,8 @@ func sacrificePawn():
 	MOVING_PIECE.queue_free()
 
 func initializeTurn():
-	RightPanelUI.theme = load(player[0].button_theme)
-	BottomPanelUI.theme = load(player[0].button_theme)
+	MAIN.NE_CONTAINER.theme = load(player[0].button_theme)
+	MAIN.BOTTOM_PANEL.theme = load(player[0].button_theme)
 	updateMoveAvailable(true)
 	updateBuyAvailable(true)
 	updatePoints(1)
@@ -128,6 +102,20 @@ func initializeTurn():
 		var TEXTURE_BUTTON = piece.get_node("TextureButton")
 		TEXTURE_BUTTON.disabled = true
 		TEXTURE_BUTTON.set_mouse_filter(2)
+
+func endTurn():
+	resetMoveTiles()
+	clearBuyBox()
+	
+	if player[0].points >= 20:
+		game_over()
+		return
+	
+	player[0].pieces[-1].is_moveable = true
+		
+	#Initialize new turn
+	player.reverse()
+	initializeTurn()
 
 func getMovementTiles(CHESS_PIECE):
 	var tilesArray = []
@@ -269,18 +257,7 @@ func getMovementTiles(CHESS_PIECE):
 	return tilesArray
 
 func _on_end_turn_button_button_up():
-	resetMoveTiles()
-	clearBuyBox()
-	
-	if player[0].points >= 20:
-		game_over()
-		return
-	
-	player[0].pieces[-1].is_moveable = true
-		
-	#Initialize new turn
-	player.reverse()
-	initializeTurn()
+	endTurn()
 
 func _on_buy_piece_button_up(piece_name):
 	resetMoveTiles()

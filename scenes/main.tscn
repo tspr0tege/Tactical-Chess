@@ -1,196 +1,176 @@
-[gd_scene load_steps=11 format=3 uid="uid://gnigemb2g7pn"]
+[gd_scene load_steps=18 format=3 uid="uid://gnigemb2g7pn"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_n8utc"]
 [ext_resource type="Script" path="res://scripts/GameBoard.gd" id="2_ofa78"]
+[ext_resource type="Script" path="res://scripts/Camera2D.gd" id="3_m151d"]
 [ext_resource type="Theme" uid="uid://bkh3fp6sjq801" path="res://themes/white_player_turn_theme.tres" id="3_rdkri"]
-[ext_resource type="Texture2D" uid="uid://cd3pvwmn4kykx" path="res://move.svg" id="4_sflqm"]
-[ext_resource type="Texture2D" uid="uid://bum1wehl7q53x" path="res://chess-pawn.svg" id="5_agrjk"]
+[ext_resource type="Texture2D" uid="uid://bb64m2blth33i" path="res://sprites/Tactical Chess BG.png" id="4_rmfkq"]
+[ext_resource type="Texture2D" uid="uid://mtw138aebc28" path="res://icons/chess-pawn.svg" id="5_jyy2y"]
+[ext_resource type="Texture2D" uid="uid://befrma6v3roee" path="res://icons/chess-bishop.svg" id="7_0mm4o"]
 [ext_resource type="Script" path="res://scripts/PointsInit.gd" id="7_2fb74"]
+[ext_resource type="Texture2D" uid="uid://dw8drpdksecoe" path="res://icons/chess-knight.svg" id="8_r2ofg"]
 [ext_resource type="Script" path="res://scripts/BuyButtons.gd" id="8_rmqtf"]
 [ext_resource type="Script" path="res://scripts/MenuButton.gd" id="9_gwtr1"]
+[ext_resource type="Texture2D" uid="uid://cybr4w5wu21cf" path="res://icons/chess-rook.svg" id="9_wprhi"]
+[ext_resource type="Texture2D" uid="uid://dopvfee0mnmyl" path="res://icons/cog.svg" id="10_cegto"]
+[ext_resource type="Texture2D" uid="uid://co0jbkskl0t2y" path="res://icons/chess-queen.svg" id="10_o5auv"]
+[ext_resource type="Texture2D" uid="uid://cmekm203t3mnc" path="res://sprites/Themes/White Button.png" id="12_bae85"]
+[ext_resource type="Texture2D" uid="uid://ba8fimgoi68jm" path="res://sprites/Themes/Black Button.png" id="14_3qlru"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nefxe"]
-bg_color = Color(0.6, 0.6, 0.6, 0.282353)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p00hg"]
-bg_color = Color(0.214844, 0.214844, 0.214844, 1)
-corner_radius_top_left = 25
-corner_radius_top_right = 25
-corner_radius_bottom_right = 25
-corner_radius_bottom_left = 25
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_aifjw"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_n8utc")
 
-[node name="GameBoard" type="Node2D" parent="."]
-position = Vector2(200, 200)
-script = ExtResource("2_ofa78")
-
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="RightPanel" type="PanelContainer" parent="CanvasLayer"]
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
+anchors_preset = 15
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -78.0
-offset_top = -20.0
-offset_bottom = 20.0
-grow_horizontal = 0
+anchor_bottom = 1.0
+grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="CanvasLayer/VBoxContainer/SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(900, 520)
+render_target_update_mode = 4
+
+[node name="GameBoard" type="Node2D" parent="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport"]
+script = ExtResource("2_ofa78")
+
+[node name="Camera2D" type="Camera2D" parent="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport"]
+offset = Vector2(226, 8)
+script = ExtResource("3_m151d")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport/Camera2D"]
+layer = -1
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport/Camera2D/CanvasLayer"]
+modulate = Color(0.439216, 0.792157, 1, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_top = -16.0
+offset_right = 1.0
+offset_bottom = 96.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_rmfkq")
+
+[node name="BottomPanel" type="PanelContainer" parent="CanvasLayer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 8
+theme = ExtResource("3_rdkri")
+
+[node name="MarginContainer" type="CenterContainer" parent="CanvasLayer/VBoxContainer/BottomPanel"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+
+[node name="BuyButtonsContainer" type="HBoxContainer" parent="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="PawnButton" type="Button" parent="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+icon = ExtResource("5_jyy2y")
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("8_rmqtf")
+
+[node name="BishopButton" type="Button" parent="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+icon = ExtResource("7_0mm4o")
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("8_rmqtf")
+
+[node name="KnightButton" type="Button" parent="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+icon = ExtResource("8_r2ofg")
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("8_rmqtf")
+
+[node name="RookButton" type="Button" parent="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+icon = ExtResource("9_wprhi")
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("8_rmqtf")
+
+[node name="QueenButton" type="Button" parent="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+icon = ExtResource("10_o5auv")
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("8_rmqtf")
+
+[node name="NEContainer" type="MarginContainer" parent="CanvasLayer"]
+unique_name_in_owner = true
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -126.0
+offset_bottom = 79.0
+grow_horizontal = 0
 size_flags_horizontal = 8
 theme = ExtResource("3_rdkri")
-theme_override_styles/panel = SubResource("StyleBoxFlat_nefxe")
-
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/RightPanel"]
-layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="TurnControls" type="VBoxContainer" parent="CanvasLayer/RightPanel/MarginContainer"]
+[node name="EndTurnButton" type="Button" parent="CanvasLayer/NEContainer"]
+custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="AvailableActions" type="HBoxContainer" parent="CanvasLayer/RightPanel/MarginContainer/TurnControls"]
-custom_minimum_size = Vector2(0, 50)
-layout_mode = 2
-
-[node name="MoveAvailable" type="PanelContainer" parent="CanvasLayer/RightPanel/MarginContainer/TurnControls/AvailableActions"]
-modulate = Color(0.2, 1, 0.2, 1)
-layout_mode = 2
-tooltip_text = "Move available"
-theme_override_styles/panel = SubResource("StyleBoxFlat_p00hg")
-
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/RightPanel/MarginContainer/TurnControls/AvailableActions/MoveAvailable"]
-layout_mode = 2
-texture = ExtResource("4_sflqm")
-expand_mode = 2
-
-[node name="BuyAvailable" type="PanelContainer" parent="CanvasLayer/RightPanel/MarginContainer/TurnControls/AvailableActions"]
-modulate = Color(0.2, 1, 0.2, 1)
-clip_contents = true
-layout_mode = 2
-tooltip_text = "New piece available"
-theme_override_styles/panel = SubResource("StyleBoxFlat_p00hg")
-
-[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/RightPanel/MarginContainer/TurnControls/AvailableActions/BuyAvailable"]
-layout_mode = 2
-texture = ExtResource("5_agrjk")
-expand_mode = 2
-
-[node name="EndTurnButton" type="Button" parent="CanvasLayer/RightPanel/MarginContainer/TurnControls"]
-layout_mode = 2
-text = "End Turn"
-
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer"]
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 0
-theme = ExtResource("3_rdkri")
-theme_override_constants/margin_left = 50
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 50
-theme_override_constants/margin_bottom = 50
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/MarginContainer"]
-layout_mode = 2
-
-[node name="WhitePoints" type="VBoxContainer" parent="CanvasLayer/MarginContainer/HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Header" type="RichTextLabel" parent="CanvasLayer/MarginContainer/HBoxContainer2/WhitePoints"]
-layout_mode = 2
-size_flags_horizontal = 3
-bbcode_enabled = true
-text = "[center]White Points[/center]"
-fit_content = true
-
-[node name="Value" type="RichTextLabel" parent="CanvasLayer/MarginContainer/HBoxContainer2/WhitePoints"]
-layout_mode = 2
-size_flags_horizontal = 3
-bbcode_enabled = true
-text = "[left]White Points[/left]"
-fit_content = true
-script = ExtResource("7_2fb74")
-
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MarginContainer/HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 3.0
-alignment = 1
-
-[node name="PawnButton" type="Button" parent="CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-disabled = true
-text = "Pawn (1)"
-script = ExtResource("8_rmqtf")
-
-[node name="BishopButton" type="Button" parent="CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-disabled = true
-text = "Bishop (2)"
-script = ExtResource("8_rmqtf")
-
-[node name="KnightButton" type="Button" parent="CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-disabled = true
-text = "Knight (3)"
-script = ExtResource("8_rmqtf")
-
-[node name="RookButton" type="Button" parent="CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-disabled = true
-text = "Rook (5)"
-script = ExtResource("8_rmqtf")
-
-[node name="QueenButton" type="Button" parent="CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-disabled = true
-text = "Queen (9)"
-script = ExtResource("8_rmqtf")
-
-[node name="BlackPoints" type="VBoxContainer" parent="CanvasLayer/MarginContainer/HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Header" type="RichTextLabel" parent="CanvasLayer/MarginContainer/HBoxContainer2/BlackPoints"]
-layout_mode = 2
-size_flags_horizontal = 3
-bbcode_enabled = true
-text = "[center]Black Points[/center]"
-fit_content = true
-
-[node name="Value" type="RichTextLabel" parent="CanvasLayer/MarginContainer/HBoxContainer2/BlackPoints"]
-layout_mode = 2
-size_flags_horizontal = 3
-bbcode_enabled = true
-text = "[right]Black Points[/right]"
-fit_content = true
-script = ExtResource("7_2fb74")
+theme_override_font_sizes/font_size = 18
+text = "Pass"
 
 [node name="MenuContainer" type="MarginContainer" parent="CanvasLayer"]
 offset_right = 40.0
 offset_bottom = 40.0
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
 
 [node name="MenuButton" type="MenuButton" parent="CanvasLayer/MenuContainer"]
+self_modulate = Color(1, 1, 1, 0.866667)
+custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-text = "MENU"
+icon = ExtResource("10_cegto")
+icon_alignment = 1
+expand_icon = true
 script = ExtResource("9_gwtr1")
 
 [node name="PopupMenu" type="PopupMenu" parent="CanvasLayer/MenuContainer/MenuButton"]
@@ -228,12 +208,170 @@ text = "QUIT"
 layout_mode = 2
 size_flags_vertical = 3
 
-[connection signal="button_up" from="CanvasLayer/RightPanel/MarginContainer/TurnControls/EndTurnButton" to="GameBoard" method="_on_end_turn_button_button_up"]
-[connection signal="button_up" from="CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer/PawnButton" to="GameBoard" method="_on_buy_piece_button_up" binds= ["Pawn"]]
-[connection signal="button_up" from="CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer/BishopButton" to="GameBoard" method="_on_buy_piece_button_up" binds= ["Bishop"]]
-[connection signal="button_up" from="CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer/KnightButton" to="GameBoard" method="_on_buy_piece_button_up" binds= ["Knight"]]
-[connection signal="button_up" from="CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer/RookButton" to="GameBoard" method="_on_buy_piece_button_up" binds= ["Rook"]]
-[connection signal="button_up" from="CanvasLayer/MarginContainer/HBoxContainer2/HBoxContainer/QueenButton" to="GameBoard" method="_on_buy_piece_button_up" binds= ["Queen"]]
+[node name="WhitePoints" type="PanelContainer" parent="CanvasLayer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 100)
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -3.0
+offset_top = -97.0
+offset_right = 97.0
+offset_bottom = 3.0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_aifjw")
+
+[node name="NinePatchRect" type="NinePatchRect" parent="CanvasLayer/WhitePoints"]
+layout_mode = 2
+texture = ExtResource("12_bae85")
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+
+[node name="Display" type="VBoxContainer" parent="CanvasLayer/WhitePoints"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HeaderMargin" type="MarginContainer" parent="CanvasLayer/WhitePoints/Display"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+
+[node name="Header" type="Label" parent="CanvasLayer/WhitePoints/Display/HeaderMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+text = "White"
+horizontal_alignment = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/WhitePoints/Display"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Relief" type="Control" parent="CanvasLayer/WhitePoints/Display/CenterContainer"]
+layout_mode = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="CanvasLayer/WhitePoints/Display/CenterContainer/Relief"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_right = 60.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 3.14159
+pivot_offset = Vector2(15, 15)
+texture = ExtResource("12_bae85")
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Value" type="Label" parent="CanvasLayer/WhitePoints/Display/CenterContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "0
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("7_2fb74")
+
+[node name="BlackPoints" type="PanelContainer" parent="CanvasLayer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 100)
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -97.0
+offset_top = -97.0
+offset_right = 3.0
+offset_bottom = 3.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_aifjw")
+
+[node name="NinePatchRect" type="NinePatchRect" parent="CanvasLayer/BlackPoints"]
+layout_mode = 2
+texture = ExtResource("14_3qlru")
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+
+[node name="Display" type="VBoxContainer" parent="CanvasLayer/BlackPoints"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HeaderMargin" type="MarginContainer" parent="CanvasLayer/BlackPoints/Display"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+
+[node name="Header" type="Label" parent="CanvasLayer/BlackPoints/Display/HeaderMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 18
+text = "Black"
+horizontal_alignment = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/BlackPoints/Display"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Relief" type="Control" parent="CanvasLayer/BlackPoints/Display/CenterContainer"]
+layout_mode = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="CanvasLayer/BlackPoints/Display/CenterContainer/Relief"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_right = 60.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 3.14159
+pivot_offset = Vector2(15, 15)
+texture = ExtResource("14_3qlru")
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Value" type="Label" parent="CanvasLayer/BlackPoints/Display/CenterContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "0
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("7_2fb74")
+
+[connection signal="item_rect_changed" from="CanvasLayer/VBoxContainer/SubViewportContainer" to="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport/Camera2D" method="_on_sub_viewport_container_item_rect_changed"]
+[connection signal="button_up" from="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer/PawnButton" to="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport/GameBoard" method="_on_buy_piece_button_up" binds= ["Pawn"]]
+[connection signal="button_up" from="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer/BishopButton" to="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport/GameBoard" method="_on_buy_piece_button_up" binds= ["Bishop"]]
+[connection signal="button_up" from="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer/KnightButton" to="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport/GameBoard" method="_on_buy_piece_button_up" binds= ["Knight"]]
+[connection signal="button_up" from="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer/RookButton" to="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport/GameBoard" method="_on_buy_piece_button_up" binds= ["Rook"]]
+[connection signal="button_up" from="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer/QueenButton" to="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport/GameBoard" method="_on_buy_piece_button_up" binds= ["Queen"]]
+[connection signal="button_up" from="CanvasLayer/NEContainer/EndTurnButton" to="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport/GameBoard" method="_on_end_turn_button_button_up"]
 [connection signal="toggled" from="CanvasLayer/MenuContainer/MenuButton" to="CanvasLayer/MenuContainer/MenuButton" method="_on_toggled"]
 [connection signal="button_down" from="CanvasLayer/MenuContainer/MenuButton/PopupMenu/MarginContainer/VBoxContainer/Restart" to="." method="_on_restart_button_down"]
 [connection signal="button_down" from="CanvasLayer/MenuContainer/MenuButton/PopupMenu/MarginContainer/VBoxContainer/Quit" to="." method="_on_quit_button_down"]
