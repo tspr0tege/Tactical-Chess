@@ -2,7 +2,7 @@ extends Button
 
 @onready var MAIN = find_parent("Main")
 @onready var piece = self.name.substr(0, self.name.length() - 6)
-@onready var cost = MAIN.pieceValues[piece]
+@onready var cost = Data.pieceValues[piece]
 
 func _ready():
 	isAvailable()

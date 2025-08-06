@@ -1,15 +1,13 @@
-[gd_scene load_steps=18 format=3 uid="uid://gnigemb2g7pn"]
+[gd_scene load_steps=16 format=3 uid="uid://ctfpf8uarq0qe"]
 
-[ext_resource type="Script" path="res://scripts/main.gd" id="1_n8utc"]
+[ext_resource type="Script" path="res://scenes/Main.gd" id="1_723cd"]
 [ext_resource type="Script" path="res://scripts/GameBoard.gd" id="2_ofa78"]
 [ext_resource type="Script" path="res://scripts/Camera2D.gd" id="3_m151d"]
 [ext_resource type="Theme" uid="uid://bkh3fp6sjq801" path="res://themes/white_player_turn_theme.tres" id="3_rdkri"]
 [ext_resource type="Texture2D" uid="uid://bb64m2blth33i" path="res://sprites/Tactical Chess BG.png" id="4_rmfkq"]
 [ext_resource type="Texture2D" uid="uid://mtw138aebc28" path="res://icons/chess-pawn.svg" id="5_jyy2y"]
 [ext_resource type="Texture2D" uid="uid://befrma6v3roee" path="res://icons/chess-bishop.svg" id="7_0mm4o"]
-[ext_resource type="Script" path="res://scripts/PointsInit.gd" id="7_2fb74"]
 [ext_resource type="Texture2D" uid="uid://dw8drpdksecoe" path="res://icons/chess-knight.svg" id="8_r2ofg"]
-[ext_resource type="Script" path="res://scripts/BuyButtons.gd" id="8_rmqtf"]
 [ext_resource type="Script" path="res://scripts/MenuButton.gd" id="9_gwtr1"]
 [ext_resource type="Texture2D" uid="uid://cybr4w5wu21cf" path="res://icons/chess-rook.svg" id="9_wprhi"]
 [ext_resource type="Texture2D" uid="uid://dopvfee0mnmyl" path="res://icons/cog.svg" id="10_cegto"]
@@ -20,7 +18,7 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_aifjw"]
 
 [node name="Main" type="Node2D"]
-script = ExtResource("1_n8utc")
+script = ExtResource("1_723cd")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -45,6 +43,7 @@ size = Vector2i(900, 520)
 render_target_update_mode = 4
 
 [node name="GameBoard" type="Node2D" parent="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport"]
+unique_name_in_owner = true
 script = ExtResource("2_ofa78")
 
 [node name="Camera2D" type="Camera2D" parent="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport"]
@@ -82,58 +81,53 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0
-theme_override_constants/separation = 40
+theme_override_constants/separation = 30
 alignment = 1
 
 [node name="PawnButton" type="Button" parent="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer"]
-custom_minimum_size = Vector2(50, 50)
+custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
 size_flags_horizontal = 3
 disabled = true
 icon = ExtResource("5_jyy2y")
 icon_alignment = 1
 expand_icon = true
-script = ExtResource("8_rmqtf")
 
 [node name="BishopButton" type="Button" parent="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer"]
-custom_minimum_size = Vector2(50, 50)
+custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
 size_flags_horizontal = 3
 disabled = true
 icon = ExtResource("7_0mm4o")
 icon_alignment = 1
 expand_icon = true
-script = ExtResource("8_rmqtf")
 
 [node name="KnightButton" type="Button" parent="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer"]
-custom_minimum_size = Vector2(50, 50)
+custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
 size_flags_horizontal = 3
 disabled = true
 icon = ExtResource("8_r2ofg")
 icon_alignment = 1
 expand_icon = true
-script = ExtResource("8_rmqtf")
 
 [node name="RookButton" type="Button" parent="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer"]
-custom_minimum_size = Vector2(50, 50)
+custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
 size_flags_horizontal = 3
 disabled = true
 icon = ExtResource("9_wprhi")
 icon_alignment = 1
 expand_icon = true
-script = ExtResource("8_rmqtf")
 
 [node name="QueenButton" type="Button" parent="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer"]
-custom_minimum_size = Vector2(50, 50)
+custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
 size_flags_horizontal = 3
 disabled = true
 icon = ExtResource("10_o5auv")
 icon_alignment = 1
 expand_icon = true
-script = ExtResource("8_rmqtf")
 
 [node name="NEContainer" type="MarginContainer" parent="CanvasLayer"]
 unique_name_in_owner = true
@@ -150,11 +144,23 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="EndTurnButton" type="Button" parent="CanvasLayer/NEContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/NEContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="EndTurnButton" type="Button" parent="CanvasLayer/NEContainer/VBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Pass"
+
+[node name="SacrificePawnButton" type="Button" parent="CanvasLayer/NEContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "Pass"
+text = "Sacrifice Pawn"
 
 [node name="MenuContainer" type="MarginContainer" parent="CanvasLayer"]
 offset_right = 40.0
@@ -209,7 +215,6 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="WhitePoints" type="PanelContainer" parent="CanvasLayer"]
-unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 100)
 anchors_preset = 2
 anchor_top = 1.0
@@ -274,7 +279,8 @@ patch_margin_bottom = 8
 axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
 
-[node name="Value" type="Label" parent="CanvasLayer/WhitePoints/Display/CenterContainer"]
+[node name="WhitePointsLabel" type="Label" parent="CanvasLayer/WhitePoints/Display/CenterContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
 theme_override_colors/font_color = Color(0, 0, 0, 1)
@@ -283,10 +289,8 @@ text = "0
 "
 horizontal_alignment = 1
 vertical_alignment = 1
-script = ExtResource("7_2fb74")
 
 [node name="BlackPoints" type="PanelContainer" parent="CanvasLayer"]
-unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 100)
 anchors_preset = 3
 anchor_left = 1.0
@@ -354,7 +358,8 @@ patch_margin_bottom = 8
 axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
 
-[node name="Value" type="Label" parent="CanvasLayer/BlackPoints/Display/CenterContainer"]
+[node name="BlackPointsLabel" type="Label" parent="CanvasLayer/BlackPoints/Display/CenterContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -363,15 +368,22 @@ text = "0
 "
 horizontal_alignment = 1
 vertical_alignment = 1
-script = ExtResource("7_2fb74")
 
 [connection signal="item_rect_changed" from="CanvasLayer/VBoxContainer/SubViewportContainer" to="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport/Camera2D" method="_on_sub_viewport_container_item_rect_changed"]
-[connection signal="button_up" from="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer/PawnButton" to="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport/GameBoard" method="_on_buy_piece_button_up" binds= ["Pawn"]]
-[connection signal="button_up" from="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer/BishopButton" to="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport/GameBoard" method="_on_buy_piece_button_up" binds= ["Bishop"]]
-[connection signal="button_up" from="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer/KnightButton" to="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport/GameBoard" method="_on_buy_piece_button_up" binds= ["Knight"]]
-[connection signal="button_up" from="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer/RookButton" to="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport/GameBoard" method="_on_buy_piece_button_up" binds= ["Rook"]]
-[connection signal="button_up" from="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer/QueenButton" to="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport/GameBoard" method="_on_buy_piece_button_up" binds= ["Queen"]]
-[connection signal="button_up" from="CanvasLayer/NEContainer/EndTurnButton" to="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport/GameBoard" method="_on_end_turn_button_button_up"]
+[connection signal="end_turn" from="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport/GameBoard" to="." method="_handle_end_turn"]
+[connection signal="place_new_piece" from="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport/GameBoard" to="." method="_handle_place_new_piece"]
+[connection signal="remove_piece" from="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport/GameBoard" to="." method="_handle_remove_piece"]
+[connection signal="show_sacrifice_pawn" from="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport/GameBoard" to="." method="_handle_show_sacrifice_pawn_button"]
+[connection signal="update_player_points" from="CanvasLayer/VBoxContainer/SubViewportContainer/SubViewport/GameBoard" to="." method="_handle_update_player_points"]
+[connection signal="button_up" from="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer/PawnButton" to="." method="_handle_buy_button_pressed" binds= ["Pawn"]]
+[connection signal="button_up" from="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer/BishopButton" to="." method="_handle_buy_button_pressed" binds= ["Bishop"]]
+[connection signal="button_up" from="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer/KnightButton" to="." method="_handle_buy_button_pressed" binds= ["Knight"]]
+[connection signal="button_up" from="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer/RookButton" to="." method="_handle_buy_button_pressed" binds= ["Rook"]]
+[connection signal="button_up" from="CanvasLayer/VBoxContainer/BottomPanel/MarginContainer/BuyButtonsContainer/QueenButton" to="." method="_handle_buy_button_pressed" binds= ["Queen"]]
+[connection signal="button_up" from="CanvasLayer/NEContainer/VBoxContainer/EndTurnButton" to="." method="_handle_end_turn"]
+[connection signal="button_up" from="CanvasLayer/NEContainer/VBoxContainer/SacrificePawnButton" to="." method="_handle_sacrifice_pawn_button_pressed"]
 [connection signal="toggled" from="CanvasLayer/MenuContainer/MenuButton" to="CanvasLayer/MenuContainer/MenuButton" method="_on_toggled"]
 [connection signal="button_down" from="CanvasLayer/MenuContainer/MenuButton/PopupMenu/MarginContainer/VBoxContainer/Restart" to="." method="_on_restart_button_down"]
 [connection signal="button_down" from="CanvasLayer/MenuContainer/MenuButton/PopupMenu/MarginContainer/VBoxContainer/Quit" to="." method="_on_quit_button_down"]
+[connection signal="ready" from="CanvasLayer/WhitePoints/Display/CenterContainer/WhitePointsLabel" to="." method="_update_white_points"]
+[connection signal="ready" from="CanvasLayer/BlackPoints/Display/CenterContainer/BlackPointsLabel" to="." method="_update_black_points"]
