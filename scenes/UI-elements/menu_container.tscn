@@ -1,0 +1,60 @@
+[gd_scene load_steps=3 format=3 uid="uid://dlmskgn3v6npu"]
+
+[ext_resource type="Script" path="res://scenes/UI-elements/MenuContainer.gd" id="1_e2it6"]
+[ext_resource type="Texture2D" uid="uid://dopvfee0mnmyl" path="res://icons/cog.svg" id="2_nus21"]
+
+[node name="MenuContainer" type="MarginContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+script = ExtResource("1_e2it6")
+
+[node name="MenuButton" type="MenuButton" parent="."]
+self_modulate = Color(1, 1, 1, 0.866667)
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+icon = ExtResource("2_nus21")
+icon_alignment = 1
+expand_icon = true
+
+[node name="PopupMenu" type="PopupMenu" parent="MenuButton"]
+initial_position = 1
+size = Vector2i(200, 200)
+
+[node name="MarginContainer" type="MarginContainer" parent="MenuButton/PopupMenu"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MenuButton/PopupMenu/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Spacer" type="Control" parent="MenuButton/PopupMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Restart" type="Button" parent="MenuButton/PopupMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "RESTART"
+
+[node name="Quit" type="Button" parent="MenuButton/PopupMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "QUIT"
+
+[node name="Spacer2" type="Control" parent="MenuButton/PopupMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[connection signal="toggled" from="MenuButton" to="." method="_on_menu_toggled"]
+[connection signal="button_down" from="MenuButton/PopupMenu/MarginContainer/VBoxContainer/Restart" to="." method="_handle_menu_input"]
+[connection signal="button_down" from="MenuButton/PopupMenu/MarginContainer/VBoxContainer/Quit" to="." method="_handle_menu_input"]

@@ -1,0 +1,57 @@
+[gd_scene load_steps=9 format=3 uid="uid://lh0kacj47ntb"]
+
+[ext_resource type="Script" path="res://WebsocketMultiplayerMain.gd" id="1_d70t6"]
+[ext_resource type="PackedScene" uid="uid://277tey8xps2d" path="res://scenes/UI-elements/main_game_container.tscn" id="2_cmsty"]
+[ext_resource type="PackedScene" uid="uid://dt465xwj83k2f" path="res://scenes/UI-elements/ne_container.tscn" id="3_rhlfx"]
+[ext_resource type="PackedScene" uid="uid://dlmskgn3v6npu" path="res://scenes/UI-elements/menu_container.tscn" id="4_f5k2o"]
+[ext_resource type="PackedScene" uid="uid://bcu143sd68a5k" path="res://scenes/UI-elements/white_points.tscn" id="5_x6hln"]
+[ext_resource type="PackedScene" uid="uid://4nemxuh8dgf3" path="res://scenes/UI-elements/black_points.tscn" id="6_jjyyu"]
+[ext_resource type="Script" path="res://scenes/connect-workflow.gd" id="7_rj467"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jga6b"]
+bg_color = Color(0, 0, 0, 0.866667)
+
+[node name="WebsocketMultiplayerMain" type="Node2D" node_paths=PackedStringArray("MULTIPLAYER_POP_UP", "NE_CONTAINER", "BOTTOM_PANEL", "GAME_BOARD", "SACRIFICE_PAWN_BUTTON", "WHITE_POINTS_CONTAINER", "BLACK_POINTS_CONTAINER", "BUY_BUTTONS_CONTAINER")]
+script = ExtResource("1_d70t6")
+MULTIPLAYER_POP_UP = NodePath("CanvasLayer/MultiplayerPopup")
+NE_CONTAINER = NodePath("CanvasLayer/NEContainer")
+BOTTOM_PANEL = NodePath("CanvasLayer/MainGameContainer/BottomPanel")
+GAME_BOARD = NodePath("CanvasLayer/MainGameContainer/SubViewportContainer/SubViewport/GameBoard")
+SACRIFICE_PAWN_BUTTON = NodePath("CanvasLayer/NEContainer/VBoxContainer/SacrificePawnButton")
+WHITE_POINTS_CONTAINER = NodePath("CanvasLayer/WhitePoints")
+BLACK_POINTS_CONTAINER = NodePath("CanvasLayer/BlackPoints")
+BUY_BUTTONS_CONTAINER = NodePath("CanvasLayer/MainGameContainer/BottomPanel/MarginContainer/BuyButtonsContainer")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="MainGameContainer" parent="CanvasLayer" instance=ExtResource("2_cmsty")]
+
+[node name="NEContainer" parent="CanvasLayer" instance=ExtResource("3_rhlfx")]
+
+[node name="MenuContainer" parent="CanvasLayer" instance=ExtResource("4_f5k2o")]
+
+[node name="WhitePoints" parent="CanvasLayer" instance=ExtResource("5_x6hln")]
+
+[node name="BlackPoints" parent="CanvasLayer" instance=ExtResource("6_jjyyu")]
+
+[node name="MultiplayerPopup" type="PanelContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jga6b")
+script = ExtResource("7_rj467")
+
+[connection signal="considering_move" from="CanvasLayer/MainGameContainer/SubViewportContainer/SubViewport/GameBoard" to="." method="_handle_considering_move"]
+[connection signal="considering_pawn_sacrifice" from="CanvasLayer/MainGameContainer/SubViewportContainer/SubViewport/GameBoard" to="." method="_pawn_sacrifice_possible"]
+[connection signal="create_kings" from="CanvasLayer/MainGameContainer/SubViewportContainer/SubViewport/GameBoard" to="." method="create_new_piece"]
+[connection signal="end_turn" from="CanvasLayer/MainGameContainer/SubViewportContainer/SubViewport/GameBoard" to="." method="_handle_end_turn"]
+[connection signal="buy_button_pressed" from="CanvasLayer/MainGameContainer/BottomPanel" to="." method="_handle_buy_button_pressed"]
+[connection signal="button_up" from="CanvasLayer/NEContainer/VBoxContainer/EndTurnButton" to="." method="_handle_end_turn"]
+[connection signal="create_new_game" from="CanvasLayer/MultiplayerPopup" to="." method="_on_create_room_pressed"]
+[connection signal="join_created_game" from="CanvasLayer/MultiplayerPopup" to="." method="_on_join_code_submitted"]
+
+[editable path="CanvasLayer/MainGameContainer"]
+[editable path="CanvasLayer/MainGameContainer/BottomPanel"]
+[editable path="CanvasLayer/NEContainer"]

@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=3 uid="uid://dt465xwj83k2f"]
+
+[ext_resource type="Theme" uid="uid://bkh3fp6sjq801" path="res://themes/white_player_turn_theme.tres" id="1_x5wmf"]
+
+[node name="NEContainer" type="MarginContainer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -126.0
+offset_bottom = 79.0
+grow_horizontal = 0
+size_flags_horizontal = 8
+theme = ExtResource("1_x5wmf")
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="EndTurnButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Pass"
+
+[node name="SacrificePawnButton" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Sacrifice Pawn"

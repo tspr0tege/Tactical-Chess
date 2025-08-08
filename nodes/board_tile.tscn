@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://nodes/board_tile.gd" id="1_ickp0"]
 [ext_resource type="Texture2D" uid="uid://bckf1dtne2qvw" path="res://sprites/Top Down/Tiles/Marble 1 TD 64x72.png" id="2_p2xay"]
 
-[node name="BoardTile" type="Node2D"]
+[node name="BoardTile" type="Node2D" groups=["Board Tiles"]]
 script = ExtResource("1_ickp0")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

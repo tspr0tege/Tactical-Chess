@@ -1,0 +1,76 @@
+[gd_scene load_steps=8 format=3 uid="uid://cnqpebexc0tbo"]
+
+[ext_resource type="Theme" uid="uid://bkh3fp6sjq801" path="res://themes/white_player_turn_theme.tres" id="1_tbbua"]
+[ext_resource type="Script" path="res://scenes/UI-elements/buy-buttons.gd" id="2_hlxli"]
+[ext_resource type="Texture2D" uid="uid://mtw138aebc28" path="res://icons/chess-pawn.svg" id="3_ydnh3"]
+[ext_resource type="Texture2D" uid="uid://befrma6v3roee" path="res://icons/chess-bishop.svg" id="4_pbrgw"]
+[ext_resource type="Texture2D" uid="uid://dw8drpdksecoe" path="res://icons/chess-knight.svg" id="5_g6hco"]
+[ext_resource type="Texture2D" uid="uid://cybr4w5wu21cf" path="res://icons/chess-rook.svg" id="6_wraeu"]
+[ext_resource type="Texture2D" uid="uid://co0jbkskl0t2y" path="res://icons/chess-queen.svg" id="7_alurm"]
+
+[node name="BottomPanel" type="PanelContainer"]
+size_flags_vertical = 8
+theme = ExtResource("1_tbbua")
+script = ExtResource("2_hlxli")
+
+[node name="MarginContainer" type="CenterContainer" parent="."]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+
+[node name="BuyButtonsContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="PawnButton" type="Button" parent="MarginContainer/BuyButtonsContainer"]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+icon = ExtResource("3_ydnh3")
+icon_alignment = 1
+expand_icon = true
+
+[node name="BishopButton" type="Button" parent="MarginContainer/BuyButtonsContainer"]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+icon = ExtResource("4_pbrgw")
+icon_alignment = 1
+expand_icon = true
+
+[node name="KnightButton" type="Button" parent="MarginContainer/BuyButtonsContainer"]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+icon = ExtResource("5_g6hco")
+icon_alignment = 1
+expand_icon = true
+
+[node name="RookButton" type="Button" parent="MarginContainer/BuyButtonsContainer"]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+icon = ExtResource("6_wraeu")
+icon_alignment = 1
+expand_icon = true
+
+[node name="QueenButton" type="Button" parent="MarginContainer/BuyButtonsContainer"]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+icon = ExtResource("7_alurm")
+icon_alignment = 1
+expand_icon = true
+
+[connection signal="button_up" from="MarginContainer/BuyButtonsContainer/PawnButton" to="." method="_handle_buy_button_input" binds= ["Pawn"]]
+[connection signal="button_up" from="MarginContainer/BuyButtonsContainer/BishopButton" to="." method="_handle_buy_button_input" binds= ["Bishop"]]
+[connection signal="button_up" from="MarginContainer/BuyButtonsContainer/KnightButton" to="." method="_handle_buy_button_input" binds= ["Knight"]]
+[connection signal="button_up" from="MarginContainer/BuyButtonsContainer/RookButton" to="." method="_handle_buy_button_input" binds= ["Rook"]]
+[connection signal="button_up" from="MarginContainer/BuyButtonsContainer/QueenButton" to="." method="_handle_buy_button_input" binds= ["Queen"]]

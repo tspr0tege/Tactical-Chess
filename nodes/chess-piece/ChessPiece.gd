@@ -9,7 +9,6 @@ var color
 var type_of_piece
 var coords
 var first_move = true
-var is_moveable = false
 
 
 func createPiece(clr, type):
@@ -46,12 +45,15 @@ func createPiece(clr, type):
 
 
 func _on_chesspiece_clicked():
-	#print("Clicked on " + str(color) + " " + str(type_of_piece))
-	if not is_moveable: return
 	chesspiece_clicked.emit(self)
 
 
-func moveTo(pos):
-	var tween = create_tween()
-	tween.tween_property(self, "position", pos, .25)
-
+func moveTo(tile, skip_tween := false):
+	coords = tile.coords
+	z_index = tile.z_index + 1
+	tile.tenant = self
+	if skip_tween:
+		position = tile.position
+	else:
+		var tween = create_tween()
+		tween.tween_property(self, "position", tile.position, .25)

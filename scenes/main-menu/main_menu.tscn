@@ -1,17 +1,17 @@
 [gd_scene load_steps=6 format=3 uid="uid://bqtwxkov74ha1"]
 
-[ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_0rn4f"]
-[ext_resource type="Texture2D" uid="uid://dwaae03lep0h2" path="res://Tactical Chess logo 001.png" id="2_5j74i"]
-[ext_resource type="StyleBox" uid="uid://cu0t7vds3ufck" path="res://themes/new_style_box_flat.tres" id="3_1aeqk"]
+[ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_uvnyn"]
+[ext_resource type="Texture2D" uid="uid://dwaae03lep0h2" path="res://Tactical Chess logo 001.png" id="2_vwpnn"]
+[ext_resource type="StyleBox" uid="uid://cu0t7vds3ufck" path="res://themes/new_style_box_flat.tres" id="3_kl4pr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t72w1"]
 bg_color = Color(0.427451, 0.717647, 1, 1)
 
 [sub_resource type="Theme" id="Theme_sfqph"]
-Button/styles/normal = ExtResource("3_1aeqk")
+Button/styles/normal = ExtResource("3_kl4pr")
 
 [node name="Main Menu" type="Node"]
-script = ExtResource("1_0rn4f")
+script = ExtResource("1_uvnyn")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 anchors_preset = 15
@@ -31,15 +31,15 @@ size_flags_horizontal = 3
 [node name="Logo" type="TextureRect" parent="PanelContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-texture = ExtResource("2_5j74i")
+texture = ExtResource("2_vwpnn")
 expand_mode = 2
 stretch_mode = 4
 
-[node name="Label" type="Label" parent="PanelContainer/HBoxContainer/VBoxContainer"]
+[node name="VersionNumber" type="Label" parent="PanelContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 24
-text = "Version 0.3"
+text = "Version 0.4"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -63,6 +63,11 @@ layout_mode = 2
 theme = SubResource("Theme_sfqph")
 text = "Local Play"
 
+[node name="Online Game" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = SubResource("Theme_sfqph")
+text = "Online Multiplayer (Beta)"
+
 [node name="How To Play" type="Button" parent="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 tooltip_text = "Coming Soon"
@@ -74,3 +79,4 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [connection signal="button_up" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/New Game" to="." method="_on_new_game_pressed"]
+[connection signal="button_up" from="PanelContainer/HBoxContainer/MarginContainer/VBoxContainer/Online Game" to="." method="_on_online_game_pressed"]

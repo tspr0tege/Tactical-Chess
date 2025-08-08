@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://nodes/chess-piece/ChessPiece.gd" id="1_wx3mr"]
 
-[node name="ChessPiece" type="Node2D"]
+[node name="ChessPiece" type="Node2D" groups=["Chess Pieces"]]
 script = ExtResource("1_wx3mr")
 
 [node name="TextureButton" type="TextureButton" parent="."]

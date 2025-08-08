@@ -1,0 +1,56 @@
+[gd_scene load_steps=5 format=3 uid="uid://277tey8xps2d"]
+
+[ext_resource type="Script" path="res://scripts/Camera2D.gd" id="1_76u2w"]
+[ext_resource type="Texture2D" uid="uid://bb64m2blth33i" path="res://sprites/Tactical Chess BG.png" id="2_g8ho4"]
+[ext_resource type="Script" path="res://scripts/GameBoard.gd" id="3_hh036"]
+[ext_resource type="PackedScene" uid="uid://cnqpebexc0tbo" path="res://scenes/UI-elements/bottom_panel.tscn" id="4_37mps"]
+
+[node name="MainGameContainer" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(900, 520)
+render_target_update_mode = 4
+
+[node name="Camera2D" type="Camera2D" parent="SubViewportContainer/SubViewport"]
+offset = Vector2(226, 8)
+script = ExtResource("1_76u2w")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="SubViewportContainer/SubViewport/Camera2D"]
+layer = -1
+
+[node name="TextureRect" type="TextureRect" parent="SubViewportContainer/SubViewport/Camera2D/CanvasLayer"]
+modulate = Color(0.439216, 0.792157, 1, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_top = -16.0
+offset_right = 1.0
+offset_bottom = 96.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_g8ho4")
+
+[node name="GameBoard" type="Node2D" parent="SubViewportContainer/SubViewport"]
+script = ExtResource("3_hh036")
+
+[node name="BottomPanel" parent="." instance=ExtResource("4_37mps")]
+layout_mode = 2
+
+[connection signal="item_rect_changed" from="SubViewportContainer" to="SubViewportContainer/SubViewport/Camera2D" method="_on_sub_viewport_container_item_rect_changed"]
+
+[editable path="BottomPanel"]

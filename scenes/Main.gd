@@ -1,96 +1,153 @@
 class_name Main extends Node2D
 
-@onready var NE_CONTAINER = %NEContainer
-@onready var BOTTOM_PANEL = %BottomPanel
-@onready var BUY_BUTTONS_CONTAINER = %BuyButtonsContainer
+@export var NE_CONTAINER : Control
+@export var BOTTOM_PANEL : Control
+@export var GAME_BOARD : Node2D
+@export var SACRIFICE_PAWN_BUTTON : Button
+@export var WHITE_POINTS_CONTAINER : Container
+@export var BLACK_POINTS_CONTAINER : Container
+@export var BUY_BUTTONS_CONTAINER : Container
+
+@onready var WHITE_POINTS_LABEL = WHITE_POINTS_CONTAINER.find_child("WhitePointsLabel")
+@onready var BLACK_POINTS_LABEL = BLACK_POINTS_CONTAINER.find_child("BlackPointsLabel")
+
+var ChessPiece = preload("res://nodes/chess-piece/chess_piece.tscn")
+
+var players = {
+	"White": {
+		"color": "White",
+		"pieces": [],
+		"points": 3,
+		"spawn_columns": [1, 2],
+		"button_theme": "res://themes/white_player_turn_theme.tres",
+	},
+	"Black": {
+		"color": "Black",
+		"pieces": [],
+		"points": 3,
+		"spawn_columns": [5, 6],
+		"button_theme": "res://themes/black_player_turn_theme.tres",
+	},
+}
+
 
 func _ready():
-	Data.players[0].update_points = _update_white_points
-	Data.players[1].update_points = _update_black_points
+	players.White.points_display = WHITE_POINTS_LABEL
+	players.Black.points_display = BLACK_POINTS_LABEL
+	WHITE_POINTS_LABEL.text = str(players.White.points)
+	BLACK_POINTS_LABEL.text = str(players.Black.points)
 	
-	for button in %BuyButtonsContainer.get_children():
-		var piece_name = button.name.substr(0, button.name.length() - 6)
-		var cost = Data.pieceValues[piece_name]
-		button.disabled = Data.players[0].points < cost
-		button.tooltip_text = "%s: %s %s" % [piece_name, cost, " point" if cost == 1 else " points"]
-
-
-func _on_restart_button_down():
-	SceneManager.load_new_local_game()
-
-
-func _on_quit_button_down():
-	SceneManager.load_main_menu()
-
-
-func _update_black_points():
-	%BlackPointsLabel.text = str(Data.players[1].points)
-
-
-func _update_white_points():
-	%WhitePointsLabel.text = str(Data.players[0].points)
-
-
-func _handle_update_player_points(value):
-	Data.players[0].points += value
-	Data.players[0].update_points.call()
-	#points_display.text = str(player[0].points)
-	#player[1].points_display.text = "[center]" + str(player[1].points) + "[/center]"
 	for button in BUY_BUTTONS_CONTAINER.get_children():
 		var piece_name = button.name.substr(0, button.name.length() - 6)
-		button.disabled = Data.players[0].points < Data.pieceValues[piece_name]
+		var cost = Data.pieceValues[piece_name]
+		button.disabled = players[Data.player_turn].points < cost
+		button.tooltip_text = "%s: %s %s" % [piece_name, cost, " point" if cost == 1 else " points"]
+	
+	initialize_turn()
 
 
-func _handle_remove_piece(player, piece):
-	Data.players[player].pieces.erase(piece)
+func update_player_points(value):
+	#check for point-based win
+	players[Data.player_turn].points += value
+	players[Data.player_turn].points_display.text = str(players[Data.player_turn].points)
+	
+	for button in BUY_BUTTONS_CONTAINER.get_children():
+		var piece_name = button.name.substr(0, button.name.length() - 6)
+		button.disabled = players[Data.player_turn].points < Data.pieceValues[piece_name]
 
 
 func _handle_buy_button_pressed(piece_name: String):
-	%GameBoard._on_buy_piece_button_up(Data.players[0], piece_name)
+	SACRIFICE_PAWN_BUTTON.visible = false
+	GAME_BOARD.PENDING_ACTION = create_new_piece.bind(piece_name)
+	GAME_BOARD.activate_spawn_columns(players[Data.player_turn].spawn_columns)
+
+
+func create_new_piece(tile, piece_name, color = Data.player_turn):
+	var player = players[color]
+	var newChessPiece = ChessPiece.instantiate()
+	newChessPiece.createPiece(color, piece_name)
+	if piece_name != "King":
+		update_player_points(-Data.pieceValues[piece_name])
+	newChessPiece.connect("chesspiece_clicked", GAME_BOARD._handle_chesspiece_clicked)
+	players[color].pieces.push_back(newChessPiece)
+	newChessPiece.moveTo(tile, true)
+	GAME_BOARD.add_child(newChessPiece)
+	GAME_BOARD.buyAvailable = false
+	for button in BUY_BUTTONS_CONTAINER.get_children():
+		button.disabled = true
+	GAME_BOARD.PENDING_ACTION = null
+
+
+func _handle_considering_move(piece):
+	SACRIFICE_PAWN_BUTTON.visible = false
+	GAME_BOARD.PENDING_ACTION = move_piece.bind(piece)
+
+
+func move_piece(tile, piece): #piece will have from coords, tile will have to coords
+	
+	if piece.type_of_piece == "King" and piece.first_move:
+		GAME_BOARD.boardTiles[piece.coords.x][piece.coords.y].queue_free()
+	else:
+		GAME_BOARD.boardTiles[piece.coords.x][piece.coords.y].tenant = null
+	
+	GAME_BOARD.moveAvailable = false
+	piece.first_move = false	
+	
+	#If there is a piece - capture it
+	if is_instance_valid(tile.tenant):
+		if tile.tenant.type_of_piece == "King":
+			print(str(piece.color) + " Wins!")
+		else:
+			update_player_points(Data.pieceValues[tile.tenant.type_of_piece])
+			players[tile.tenant.color].pieces.erase(tile.tenant)
+			tile.tenant.queue_free()
+	
+	piece.moveTo(tile)
+	GAME_BOARD.PENDING_ACTION = null
+
+
+func _pawn_sacrifice_possible(piece):
+	SACRIFICE_PAWN_BUTTON.visible = true
+	SACRIFICE_PAWN_BUTTON.connect("button_up", _sacrifice_pawn.bind(piece))
+
+
+func _sacrifice_pawn(piece):
+	GAME_BOARD.resetMoveTiles()
+	GAME_BOARD.moveAvailable = false
+	update_player_points(2)
+	players[Data.player_turn].pieces.erase(piece)
+	piece.queue_free()
+	SACRIFICE_PAWN_BUTTON.visible = false
+	GAME_BOARD.PENDING_ACTION = null
+	SACRIFICE_PAWN_BUTTON.disconnect("button_up", _sacrifice_pawn)
 
 
 func _handle_end_turn():
-	%GameBoard.resetMoveTiles()
-	%GameBoard.clearBuyBox()
+	GAME_BOARD.resetMoveTiles()
+	GAME_BOARD.NEW_PIECE = null
 	
-	if Data.players[0].points >= 20:
-		#game_over()
-		return
-	
-	Data.players[0].pieces[-1].is_moveable = true
-		
 	#Initialize new turn
-	Data.players.reverse()
+	if Data.player_turn == "White":
+		Data.player_turn = "Black"
+	else:
+		Data.player_turn = "White"
+	update_player_points(1)
 	initialize_turn()
 
 
 func initialize_turn():
-	NE_CONTAINER.theme = load(Data.players[0].button_theme)
-	BOTTOM_PANEL.theme = load(Data.players[0].button_theme)
-	%GameBoard.updateMoveAvailable(true)
-	%GameBoard.updateBuyAvailable(true)
-	_handle_update_player_points(1)
+	NE_CONTAINER.theme = load(players[Data.player_turn].button_theme)
+	BOTTOM_PANEL.theme = load(players[Data.player_turn].button_theme)
+	GAME_BOARD.moveAvailable = true
+	GAME_BOARD.buyAvailable = true
 	
-	for piece in Data.players[0].pieces:
+	var all_pieces = get_tree().get_nodes_in_group("Chess Pieces")
+	for piece in all_pieces:
 		var TEXTURE_BUTTON = piece.get_node("TextureButton")
-		TEXTURE_BUTTON.disabled = false
-		TEXTURE_BUTTON.set_mouse_filter(0)
-	
-	for piece in Data.players[1].pieces:
-		var TEXTURE_BUTTON = piece.get_node("TextureButton")
-		TEXTURE_BUTTON.disabled = true
-		TEXTURE_BUTTON.set_mouse_filter(2)
+		if piece.color != Data.player_turn or (Data.is_multiplayer_game and Data.player_turn != Data.local_player_color):
+			TEXTURE_BUTTON.disabled = true
+			TEXTURE_BUTTON.set_mouse_filter(2)
+		else:
+			TEXTURE_BUTTON.disabled = false
+			TEXTURE_BUTTON.set_mouse_filter(0)
 
-
-func _handle_place_new_piece(piece, _coords):
-	var target_player = 0 if piece.color == Data.players[0].color else 1
-	Data.players[target_player].pieces.push_back(piece)
-
-
-func _handle_show_sacrifice_pawn_button(switch: bool):
-	%SacrificePawnButton.visible = switch
-
-
-func _handle_sacrifice_pawn_button_pressed():
-	%GameBoard.sacrificePawn()
-	pass # Replace with function body.
