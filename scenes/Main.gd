@@ -108,10 +108,10 @@ func move_piece(tile, piece): #piece will have from coords, tile will have to co
 
 func _pawn_sacrifice_possible(piece):
 	SACRIFICE_PAWN_BUTTON.visible = true
-	SACRIFICE_PAWN_BUTTON.connect("button_up", _sacrifice_pawn.bind(piece))
+	SACRIFICE_PAWN_BUTTON.connect("button_up", sacrifice_pawn.bind(piece))
 
 
-func _sacrifice_pawn(piece):
+func sacrifice_pawn(piece):
 	GAME_BOARD.resetMoveTiles()
 	GAME_BOARD.moveAvailable = false
 	update_player_points(2)
@@ -119,7 +119,7 @@ func _sacrifice_pawn(piece):
 	piece.queue_free()
 	SACRIFICE_PAWN_BUTTON.visible = false
 	GAME_BOARD.PENDING_ACTION = null
-	SACRIFICE_PAWN_BUTTON.disconnect("button_up", _sacrifice_pawn)
+	SACRIFICE_PAWN_BUTTON.disconnect("button_up", sacrifice_pawn)
 
 
 func _handle_end_turn():
@@ -144,7 +144,7 @@ func initialize_turn():
 	var all_pieces = get_tree().get_nodes_in_group("Chess Pieces")
 	for piece in all_pieces:
 		var TEXTURE_BUTTON = piece.get_node("TextureButton")
-		if piece.color != Data.player_turn or (Data.is_multiplayer_game and Data.player_turn != Data.local_player_color):
+		if piece.color != Data.player_turn:
 			TEXTURE_BUTTON.disabled = true
 			TEXTURE_BUTTON.set_mouse_filter(2)
 		else:

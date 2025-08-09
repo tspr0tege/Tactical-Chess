@@ -7,8 +7,9 @@
 [ext_resource type="PackedScene" uid="uid://bcu143sd68a5k" path="res://scenes/UI-elements/white_points.tscn" id="12_qc84g"]
 [ext_resource type="PackedScene" uid="uid://4nemxuh8dgf3" path="res://scenes/UI-elements/black_points.tscn" id="13_n6als"]
 
-[node name="Main" type="Node2D" node_paths=PackedStringArray("BOTTOM_PANEL", "GAME_BOARD", "SACRIFICE_PAWN_BUTTON", "WHITE_POINTS_CONTAINER", "BLACK_POINTS_CONTAINER", "BUY_BUTTONS_CONTAINER")]
+[node name="Main" type="Node2D" node_paths=PackedStringArray("NE_CONTAINER", "BOTTOM_PANEL", "GAME_BOARD", "SACRIFICE_PAWN_BUTTON", "WHITE_POINTS_CONTAINER", "BLACK_POINTS_CONTAINER", "BUY_BUTTONS_CONTAINER")]
 script = ExtResource("1_723cd")
+NE_CONTAINER = NodePath("CanvasLayer/NEContainer")
 BOTTOM_PANEL = NodePath("CanvasLayer/MainGameContainer/BottomPanel")
 GAME_BOARD = NodePath("CanvasLayer/MainGameContainer/SubViewportContainer/SubViewport/GameBoard")
 SACRIFICE_PAWN_BUTTON = NodePath("CanvasLayer/NEContainer/VBoxContainer/SacrificePawnButton")

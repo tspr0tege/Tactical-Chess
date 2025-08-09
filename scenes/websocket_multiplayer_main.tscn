@@ -11,9 +11,11 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jga6b"]
 bg_color = Color(0, 0, 0, 0.866667)
 
-[node name="WebsocketMultiplayerMain" type="Node2D" node_paths=PackedStringArray("MULTIPLAYER_POP_UP", "NE_CONTAINER", "BOTTOM_PANEL", "GAME_BOARD", "SACRIFICE_PAWN_BUTTON", "WHITE_POINTS_CONTAINER", "BLACK_POINTS_CONTAINER", "BUY_BUTTONS_CONTAINER")]
+[node name="WebsocketMultiplayerMain" type="Node2D" node_paths=PackedStringArray("MULTIPLAYER_POP_UP", "END_TURN_BUTTON", "ID_LABEL", "NE_CONTAINER", "BOTTOM_PANEL", "GAME_BOARD", "SACRIFICE_PAWN_BUTTON", "WHITE_POINTS_CONTAINER", "BLACK_POINTS_CONTAINER", "BUY_BUTTONS_CONTAINER")]
 script = ExtResource("1_d70t6")
 MULTIPLAYER_POP_UP = NodePath("CanvasLayer/MultiplayerPopup")
+END_TURN_BUTTON = NodePath("CanvasLayer/NEContainer/VBoxContainer/EndTurnButton")
+ID_LABEL = NodePath("CanvasLayer/MainGameContainer/SubViewportContainer/SubViewport/Camera2D/CanvasLayer/IDnumber")
 NE_CONTAINER = NodePath("CanvasLayer/NEContainer")
 BOTTOM_PANEL = NodePath("CanvasLayer/MainGameContainer/BottomPanel")
 GAME_BOARD = NodePath("CanvasLayer/MainGameContainer/SubViewportContainer/SubViewport/GameBoard")
@@ -25,6 +27,16 @@ BUY_BUTTONS_CONTAINER = NodePath("CanvasLayer/MainGameContainer/BottomPanel/Marg
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="MainGameContainer" parent="CanvasLayer" instance=ExtResource("2_cmsty")]
+
+[node name="IDnumber" type="Label" parent="CanvasLayer/MainGameContainer/SubViewportContainer/SubViewport/Camera2D/CanvasLayer" index="1"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -47.0
+offset_right = 47.0
+offset_bottom = 26.0
+grow_horizontal = 2
+text = "ID  NUMBER"
 
 [node name="NEContainer" parent="CanvasLayer" instance=ExtResource("3_rhlfx")]
 
@@ -48,7 +60,7 @@ script = ExtResource("7_rj467")
 [connection signal="create_kings" from="CanvasLayer/MainGameContainer/SubViewportContainer/SubViewport/GameBoard" to="." method="create_new_piece"]
 [connection signal="end_turn" from="CanvasLayer/MainGameContainer/SubViewportContainer/SubViewport/GameBoard" to="." method="_handle_end_turn"]
 [connection signal="buy_button_pressed" from="CanvasLayer/MainGameContainer/BottomPanel" to="." method="_handle_buy_button_pressed"]
-[connection signal="button_up" from="CanvasLayer/NEContainer/VBoxContainer/EndTurnButton" to="." method="_handle_end_turn"]
+[connection signal="button_up" from="CanvasLayer/NEContainer/VBoxContainer/EndTurnButton" to="." method="_signal_end_turn"]
 [connection signal="create_new_game" from="CanvasLayer/MultiplayerPopup" to="." method="_on_create_room_pressed"]
 [connection signal="join_created_game" from="CanvasLayer/MultiplayerPopup" to="." method="_on_join_code_submitted"]
 

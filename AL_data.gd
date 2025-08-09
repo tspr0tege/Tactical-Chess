@@ -11,7 +11,7 @@ const pieceValues = {
 
 var is_multiplayer_game = false
 var local_player_color = null
+var multiplayer_id = null
 
 var player_turn = "White"
 
-var multiplayer_id = null

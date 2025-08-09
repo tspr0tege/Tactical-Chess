@@ -1,6 +1,8 @@
 extends Main
 
 @export var MULTIPLAYER_POP_UP : Container
+@export var END_TURN_BUTTON : Button
+@export var ID_LABEL : Label
 
 var tls_options: TLSOptions = null
 
@@ -13,37 +15,27 @@ signal connected_to_server()
 signal connection_closed()
 signal message_received(message: Variant)
 
-var end_turn_template = {
-	"origin": "user_id",
-	"type": "game_input",
-	"action": "END_TURN",
-}
-
 var pawn_sacrifice_template = {
-	"origin": "user_id",
+	"origin": Data.multiplayer_id,
 	"type": "game_input",
-	"action": "SACRIFICE_PAWN",
-	"coords": "Object/Dictionary"
+	"input": {
+		"opponent_id": remote_opponent_id,
+		"action": "SACRIFICE_PAWN",
+		"coords": "Object/Dictionary"
+	},
 }
 
 var create_piece_template = {
-	"origin": "user_id",
+	"origin": Data.multiplayer_id,
 	"type": "game_input",
-	"action": "CREATE",
-	"coords": "target_coords Object/Dictionary",
-	"piece": "type_of_piece",
-	"color": "creator player's color"
+	"input": {
+		"opponent_id": remote_opponent_id,
+		"action": "CREATE",
+		"coords": "target_coords Object/Dictionary",
+		"piece": "type_of_piece",
+		"color": "creator player's color"
+	},
 }
-
-var move_template = {
-	"origin": "user_id",
-	"type": "game_input",
-	"action": "MOVE",
-	"from_coords": "piece.coords Object/Dictionary",
-	"to_coords": "tile.coords Object/Dictionary",
-	"piece": "type_of_piece" #this will be for validation
-}
-
 
 func connect_to_url(url: String) -> int:
 	#socket.supported_protocols = supported_protocols
@@ -131,32 +123,112 @@ func _process(_delta: float) -> void:
 	poll()
 
 
-func _on_create_room_pressed() -> void:
-	next_action = {
-		"id": Data.multiplayer_id,
-		"action": "create_offer"
+func move_piece(tile, piece): #piece will have from coords, tile will have to coords
+	var move_output = {
+		"origin": Data.multiplayer_id,
+		"type": "game_input",
+		"input": {
+			"opponent_id": remote_opponent_id,
+			"action": "MOVE",
+			"from_coords": {"x": piece.coords.x, "y": piece.coords.y},
+			"to_coords": {"x": tile.coords.x, "y": tile.coords.y},
+			"piece": piece.type_of_piece #this will be for validation
+		},
 	}
-	#Data.local_player_color = "White"
-	connect_to_url("ws://127.0.0.1:9080")
+	print(socket.send_text(JSON.stringify(move_output)))
+	execute_move(tile, piece)
 
 
-func _on_join_code_submitted(code) -> void:
-	next_action = {
-		"id": Data.multiplayer_id,
-		"action": "claim_offer",
-		"room_code": code
-	}
-	connect_to_url("ws://127.0.0.1:9080")
-
-
-func _on_chat_container_send_message(message: String) -> void:
-	print("Sending message: " + message)
-	#var request = user_data
-	#request.action = "message"
-	#request.recipient = peer_client_id
-	#request.content = message
+func execute_move(tile, piece):
+	if piece.type_of_piece == "King" and piece.first_move:
+		GAME_BOARD.boardTiles[piece.coords.x][piece.coords.y].queue_free()
+	else:
+		GAME_BOARD.boardTiles[piece.coords.x][piece.coords.y].tenant = null
 	
-	#print(socket.send_text(JSON.stringify(request)))
+	GAME_BOARD.moveAvailable = false
+	piece.first_move = false	
+	
+	#If there is a piece - capture it
+	if is_instance_valid(tile.tenant):
+		if tile.tenant.type_of_piece == "King":
+			print(str(piece.color) + " Wins!")
+		else:
+			update_player_points(Data.pieceValues[tile.tenant.type_of_piece])
+			players[tile.tenant.color].pieces.erase(tile.tenant)
+			tile.tenant.queue_free()
+	
+	piece.moveTo(tile)
+	GAME_BOARD.PENDING_ACTION = null
+
+
+func sacrifice_pawn(piece):
+	var sacrifice_pawn_output = {
+		"origin": Data.multiplayer_id,
+		"type": "game_input",
+		"input": {
+			"opponent_id": remote_opponent_id,
+			"action": "SACRIFICE_PAWN",
+			"coords": {"x": piece.coords.x, "y": piece.coords.y}
+		},
+	}
+	print(socket.send_text(JSON.stringify(sacrifice_pawn_output)))
+	execute_sacrifice_pawn(piece)
+
+
+func execute_sacrifice_pawn(piece):
+	GAME_BOARD.resetMoveTiles()
+	GAME_BOARD.moveAvailable = false
+	update_player_points(2)
+	players[Data.player_turn].pieces.erase(piece)
+	piece.queue_free()
+	SACRIFICE_PAWN_BUTTON.visible = false
+	GAME_BOARD.PENDING_ACTION = null
+	SACRIFICE_PAWN_BUTTON.disconnect("button_up", sacrifice_pawn)
+
+
+func create_new_piece(tile, piece_name, color = Data.player_turn):
+	var new_piece_output = {
+		"origin": Data.multiplayer_id,
+		"type": "game_input",
+		"input": {
+			"opponent_id": remote_opponent_id,
+			"action": "CREATE",
+			"coords": {"x": tile.coords.x, "y": tile.coords.y},
+			"piece": piece_name,
+			"color": color
+		},
+	}
+	print(socket.send_text(JSON.stringify(new_piece_output)))
+	execute_create_new_piece(tile, piece_name, color)
+
+
+func execute_create_new_piece(tile, piece_name, color):
+	var player = players[color]
+	var newChessPiece = ChessPiece.instantiate()
+	newChessPiece.createPiece(color, piece_name)
+	if piece_name != "King":
+		update_player_points(-Data.pieceValues[piece_name])
+	newChessPiece.connect("chesspiece_clicked", GAME_BOARD._handle_chesspiece_clicked)
+	players[color].pieces.push_back(newChessPiece)
+	newChessPiece.moveTo(tile, true)
+	GAME_BOARD.add_child(newChessPiece)
+	GAME_BOARD.buyAvailable = false
+	for button in BUY_BUTTONS_CONTAINER.get_children():
+		button.disabled = true
+	GAME_BOARD.PENDING_ACTION = null
+
+
+func _signal_end_turn():
+	var request = {
+		"origin": Data.multiplayer_id,
+		"type": "game_input",
+		"input": {
+			"opponent_id": remote_opponent_id,
+			"action": "END_TURN",
+		}
+	}
+	print(socket.send_text(JSON.stringify(request)))
+	_handle_end_turn()
 
 
 func handle_remote_input(input: Dictionary) -> void:
@@ -165,23 +237,85 @@ func handle_remote_input(input: Dictionary) -> void:
 		
 		"END_TURN":
 			_handle_end_turn()
-			pass
 		
 		"SACRIFICE_PAWN":
-			# input.coords = { x: $, y: $ }
-			pass
+			#{"opponent_id": remote_opponent_id,
+			#"action": "SACRIFICE_PAWN",
+			#"coords": {"x": piece.coords.x, "y": piece.coords.y}}
+			var target_piece = GAME_BOARD.boardTiles[input.coords.x][input.coords.y].tenant
+			if !is_instance_valid(target_piece):
+				push_error("Attempting to sacrifice a Pawn at %s, but no piece found" % input.coords)
+			elif target_piece.type_of_piece != "Pawn":
+				push_error("Attempting to sacrifice a Pawn at %s, but there is a %s there" % [input.coords, target_piece.type_of_piece])
+			else:
+				execute_sacrifice_pawn(target_piece)
 		
 		"CREATE":
-			# input.coords =  { x: $, y: $ }
-			# input.piece = "Pawn", "Knight", etc.
-			# input.color = "Black" or "White" (opponent's color)
-			pass
+			# {"opponent_id": remote_opponent_id,
+			#"action": "CREATE",
+			#"coords": {"x": tile.coords.x, "y": tile.coords.y},
+			#"piece": piece_name,
+			#"color": color	}
+			var target_tile = GAME_BOARD.boardTiles[input.coords.x][input.coords.y]
+			execute_create_new_piece(target_tile, input.piece, input.color)
 		
 		"MOVE":
-			# input.from_coords =  { x: $, y: $ } (piece)
-			# input.to_coords =  =  { x: $, y: $ } (tile)
-			# input.type_of_piece = "Bishop", "Rook", etc.
-			pass
+			#{	"opponent_id": remote_opponent_id,
+			#	"action": "MOVE",
+			#	"from_coords": {"x": piece.coords.x, "y": piece.coords.y},
+			#	"to_coords": {"x": tile.coords.x, "y": tile.coords.y},
+			#	"piece": piece.type_of_piece #this will be for validation}
+			var piece_to_move = GAME_BOARD.boardTiles[input.from_coords.x][input.from_coords.y].tenant
+			var target_tile = GAME_BOARD.boardTiles[input.to_coords.x][input.to_coords.y]
+			if !is_instance_valid(piece_to_move):
+				push_error("Attempt to move %s at %s, but no piece found" % [input.piece, input.from_coords])
+			else:
+				execute_move(target_tile, piece_to_move)
 		
 		_:
 			print("Remote input action not recognized")
+
+
+func _on_create_room_pressed() -> void:
+	next_action = {
+		"id": Data.multiplayer_id,
+		"type": "create_offer"
+	}
+	#Data.local_player_color = "White"
+	connect_to_url("ws://127.0.0.1:9080")
+
+
+func _on_join_code_submitted(code) -> void:
+	next_action = {
+		"id": Data.multiplayer_id,
+		"type": "claim_offer",
+		"room_code": code
+	}
+	connect_to_url("ws://127.0.0.1:9080")
+
+
+func initialize_turn():
+	NE_CONTAINER.theme = load(players[Data.player_turn].button_theme)
+	BOTTOM_PANEL.theme = load(players[Data.player_turn].button_theme)
+	ID_LABEL.text = str(Data.multiplayer_id)
+	
+	var all_pieces = get_tree().get_nodes_in_group("Chess Pieces")
+	for piece in all_pieces:
+		var TEXTURE_BUTTON = piece.get_node("TextureButton")
+		TEXTURE_BUTTON.disabled = true
+		TEXTURE_BUTTON.set_mouse_filter(2)
+	
+	if Data.local_player_color == Data.player_turn: # local player's turn
+		NE_CONTAINER.visible = true
+		GAME_BOARD.moveAvailable = true
+		GAME_BOARD.buyAvailable = true
+		for piece in players[Data.local_player_color].pieces:
+			var TEXTURE_BUTTON = piece.get_node("TextureButton")		
+			TEXTURE_BUTTON.disabled = false
+			TEXTURE_BUTTON.set_mouse_filter(0)
+		
+	else: # not your turn
+		NE_CONTAINER.visible = false
+		GAME_BOARD.moveAvailable = false
+		GAME_BOARD.buyAvailable = false
+
