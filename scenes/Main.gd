@@ -63,7 +63,6 @@ func _handle_buy_button_pressed(piece_name: String):
 
 
 func create_new_piece(tile, piece_name, color = Data.player_turn):
-	var player = players[color]
 	var newChessPiece = ChessPiece.instantiate()
 	newChessPiece.createPiece(color, piece_name)
 	if piece_name != "King":

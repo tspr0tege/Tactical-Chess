@@ -15,27 +15,6 @@ signal connected_to_server()
 signal connection_closed()
 signal message_received(message: Variant)
 
-var pawn_sacrifice_template = {
-	"origin": Data.multiplayer_id,
-	"type": "game_input",
-	"input": {
-		"opponent_id": remote_opponent_id,
-		"action": "SACRIFICE_PAWN",
-		"coords": "Object/Dictionary"
-	},
-}
-
-var create_piece_template = {
-	"origin": Data.multiplayer_id,
-	"type": "game_input",
-	"input": {
-		"opponent_id": remote_opponent_id,
-		"action": "CREATE",
-		"coords": "target_coords Object/Dictionary",
-		"piece": "type_of_piece",
-		"color": "creator player's color"
-	},
-}
 
 func connect_to_url(url: String) -> int:
 	#socket.supported_protocols = supported_protocols
@@ -136,6 +115,8 @@ func move_piece(tile, piece): #piece will have from coords, tile will have to co
 		},
 	}
 	print(socket.send_text(JSON.stringify(move_output)))
+	GAME_BOARD.moveAvailable = false
+	GAME_BOARD.PENDING_ACTION = null
 	execute_move(tile, piece)
 
 
@@ -145,7 +126,6 @@ func execute_move(tile, piece):
 	else:
 		GAME_BOARD.boardTiles[piece.coords.x][piece.coords.y].tenant = null
 	
-	GAME_BOARD.moveAvailable = false
 	piece.first_move = false	
 	
 	#If there is a piece - capture it
@@ -158,7 +138,6 @@ func execute_move(tile, piece):
 			tile.tenant.queue_free()
 	
 	piece.moveTo(tile)
-	GAME_BOARD.PENDING_ACTION = null
 
 
 func sacrifice_pawn(piece):
@@ -172,18 +151,18 @@ func sacrifice_pawn(piece):
 		},
 	}
 	print(socket.send_text(JSON.stringify(sacrifice_pawn_output)))
+	GAME_BOARD.resetMoveTiles()
+	GAME_BOARD.moveAvailable = false
+	GAME_BOARD.PENDING_ACTION = null
+	SACRIFICE_PAWN_BUTTON.disconnect("button_up", sacrifice_pawn)
+	SACRIFICE_PAWN_BUTTON.visible = false
 	execute_sacrifice_pawn(piece)
 
 
 func execute_sacrifice_pawn(piece):
-	GAME_BOARD.resetMoveTiles()
-	GAME_BOARD.moveAvailable = false
 	update_player_points(2)
 	players[Data.player_turn].pieces.erase(piece)
 	piece.queue_free()
-	SACRIFICE_PAWN_BUTTON.visible = false
-	GAME_BOARD.PENDING_ACTION = null
-	SACRIFICE_PAWN_BUTTON.disconnect("button_up", sacrifice_pawn)
 
 
 func create_new_piece(tile, piece_name, color = Data.player_turn):
@@ -198,12 +177,15 @@ func create_new_piece(tile, piece_name, color = Data.player_turn):
 			"color": color
 		},
 	}
-	print(socket.send_text(JSON.stringify(new_piece_output)))
+	if piece_name != "King": print(socket.send_text(JSON.stringify(new_piece_output)))
+	for button in BUY_BUTTONS_CONTAINER.get_children():
+		button.disabled = true
+	GAME_BOARD.PENDING_ACTION = null
+	GAME_BOARD.buyAvailable = false
 	execute_create_new_piece(tile, piece_name, color)
 
 
 func execute_create_new_piece(tile, piece_name, color):
-	var player = players[color]
 	var newChessPiece = ChessPiece.instantiate()
 	newChessPiece.createPiece(color, piece_name)
 	if piece_name != "King":
@@ -212,10 +194,6 @@ func execute_create_new_piece(tile, piece_name, color):
 	players[color].pieces.push_back(newChessPiece)
 	newChessPiece.moveTo(tile, true)
 	GAME_BOARD.add_child(newChessPiece)
-	GAME_BOARD.buyAvailable = false
-	for button in BUY_BUTTONS_CONTAINER.get_children():
-		button.disabled = true
-	GAME_BOARD.PENDING_ACTION = null
 
 
 func _signal_end_turn():
@@ -297,7 +275,6 @@ func _on_join_code_submitted(code) -> void:
 func initialize_turn():
 	NE_CONTAINER.theme = load(players[Data.player_turn].button_theme)
 	BOTTOM_PANEL.theme = load(players[Data.player_turn].button_theme)
-	ID_LABEL.text = str(Data.multiplayer_id)
 	
 	var all_pieces = get_tree().get_nodes_in_group("Chess Pieces")
 	for piece in all_pieces:

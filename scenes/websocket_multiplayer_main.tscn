@@ -15,7 +15,7 @@ bg_color = Color(0, 0, 0, 0.866667)
 script = ExtResource("1_d70t6")
 MULTIPLAYER_POP_UP = NodePath("CanvasLayer/MultiplayerPopup")
 END_TURN_BUTTON = NodePath("CanvasLayer/NEContainer/VBoxContainer/EndTurnButton")
-ID_LABEL = NodePath("CanvasLayer/MainGameContainer/SubViewportContainer/SubViewport/Camera2D/CanvasLayer/IDnumber")
+ID_LABEL = NodePath("")
 NE_CONTAINER = NodePath("CanvasLayer/NEContainer")
 BOTTOM_PANEL = NodePath("CanvasLayer/MainGameContainer/BottomPanel")
 GAME_BOARD = NodePath("CanvasLayer/MainGameContainer/SubViewportContainer/SubViewport/GameBoard")
@@ -27,16 +27,6 @@ BUY_BUTTONS_CONTAINER = NodePath("CanvasLayer/MainGameContainer/BottomPanel/Marg
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="MainGameContainer" parent="CanvasLayer" instance=ExtResource("2_cmsty")]
-
-[node name="IDnumber" type="Label" parent="CanvasLayer/MainGameContainer/SubViewportContainer/SubViewport/Camera2D/CanvasLayer" index="1"]
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -47.0
-offset_right = 47.0
-offset_bottom = 26.0
-grow_horizontal = 2
-text = "ID  NUMBER"
 
 [node name="NEContainer" parent="CanvasLayer" instance=ExtResource("3_rhlfx")]
 
