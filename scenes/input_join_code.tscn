@@ -71,6 +71,7 @@ size_flags_stretch_ratio = 3.0
 layout_mode = 2
 text = "Cancel"
 
+[connection signal="focus_entered" from="MarginContainer/VBoxContainer/CodeInputBox" to="." method="_text_box_focus_entered"]
 [connection signal="text_changed" from="MarginContainer/VBoxContainer/CodeInputBox" to="." method="_on_code_input_box_text_changed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/Submit" to="." method="_on_submit_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_cancel_pressed"]

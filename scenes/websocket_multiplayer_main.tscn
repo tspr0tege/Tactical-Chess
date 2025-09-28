@@ -11,11 +11,10 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jga6b"]
 bg_color = Color(0, 0, 0, 0.866667)
 
-[node name="WebsocketMultiplayerMain" type="Node2D" node_paths=PackedStringArray("MULTIPLAYER_POP_UP", "END_TURN_BUTTON", "ID_LABEL", "NE_CONTAINER", "BOTTOM_PANEL", "GAME_BOARD", "SACRIFICE_PAWN_BUTTON", "WHITE_POINTS_CONTAINER", "BLACK_POINTS_CONTAINER", "BUY_BUTTONS_CONTAINER")]
+[node name="WebsocketMultiplayerMain" type="Node2D" node_paths=PackedStringArray("MULTIPLAYER_POP_UP", "END_TURN_BUTTON", "NE_CONTAINER", "BOTTOM_PANEL", "GAME_BOARD", "SACRIFICE_PAWN_BUTTON", "WHITE_POINTS_CONTAINER", "BLACK_POINTS_CONTAINER", "BUY_BUTTONS_CONTAINER")]
 script = ExtResource("1_d70t6")
 MULTIPLAYER_POP_UP = NodePath("CanvasLayer/MultiplayerPopup")
 END_TURN_BUTTON = NodePath("CanvasLayer/NEContainer/VBoxContainer/EndTurnButton")
-ID_LABEL = NodePath("")
 NE_CONTAINER = NodePath("CanvasLayer/NEContainer")
 BOTTOM_PANEL = NodePath("CanvasLayer/MainGameContainer/BottomPanel")
 GAME_BOARD = NodePath("CanvasLayer/MainGameContainer/SubViewportContainer/SubViewport/GameBoard")

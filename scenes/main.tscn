@@ -33,6 +33,7 @@ BUY_BUTTONS_CONTAINER = NodePath("CanvasLayer/MainGameContainer/BottomPanel/Marg
 [connection signal="considering_pawn_sacrifice" from="CanvasLayer/MainGameContainer/SubViewportContainer/SubViewport/GameBoard" to="." method="_pawn_sacrifice_possible"]
 [connection signal="create_kings" from="CanvasLayer/MainGameContainer/SubViewportContainer/SubViewport/GameBoard" to="." method="create_new_piece"]
 [connection signal="end_turn" from="CanvasLayer/MainGameContainer/SubViewportContainer/SubViewport/GameBoard" to="." method="_handle_end_turn"]
+[connection signal="buy_button_pressed" from="CanvasLayer/MainGameContainer/BottomPanel" to="." method="_handle_buy_button_pressed"]
 [connection signal="button_up" from="CanvasLayer/NEContainer/VBoxContainer/EndTurnButton" to="." method="_handle_end_turn"]
 
 [editable path="CanvasLayer/MainGameContainer"]

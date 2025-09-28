@@ -68,6 +68,7 @@ func poll() -> void:
 			print("ERROR received from server: " + str(data.error))
 		
 		if !next_action.is_empty():
+			print("Running next_action")
 			if next_action.id == null: next_action.id = Data.multiplayer_id
 			socket.put_packet(JSON.stringify(next_action).to_utf8_buffer())
 			next_action.clear()
@@ -94,8 +95,11 @@ func poll() -> void:
 					print("Processing input from remote")
 					handle_remote_input(data)
 					
+				"error":
+					push_error(data.error_message)
+					
 				_:
-					print("data dictionary has type: " + str(data.type))
+					print("data dictionary has unknown type: " + str(data.type))
 
 
 func _process(_delta: float) -> void:
@@ -259,17 +263,25 @@ func _on_create_room_pressed() -> void:
 		"id": Data.multiplayer_id,
 		"type": "create_offer"
 	}
-	#Data.local_player_color = "White"
-	connect_to_url("ws://127.0.0.1:9080")
+	if socket.get_ready_state() != socket.STATE_OPEN:
+		#Data.local_player_color = "White"
+		connect_to_url("ws://127.0.0.1:9080")
+		#connect_to_url("wss://tactical-chess.xyz")
 
 
 func _on_join_code_submitted(code) -> void:
-	next_action = {
+	print("Join code being sent")
+	var join_signal = {
 		"id": Data.multiplayer_id,
 		"type": "claim_offer",
 		"room_code": code
 	}
-	connect_to_url("ws://127.0.0.1:9080")
+	if socket.get_ready_state() != socket.STATE_OPEN:
+		next_action = join_signal
+		connect_to_url("ws://127.0.0.1:9080")
+		#connect_to_url("wss://tactical-chess.xyz")
+	else:
+		socket.put_packet(JSON.stringify(join_signal).to_utf8_buffer())
 
 
 func initialize_turn():
